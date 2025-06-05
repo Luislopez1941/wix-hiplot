@@ -1,0 +1,22 @@
+.services {
+    background-color: #002539;
+}
+
+.services__container {
+    display: flex;
+    justify-content: space-between;
+    padding: 50px;
+    gap: 50px;
+}
+
+.services__container .service__Card {
+    color: white;
+    max-width: 200px;
+    display: grid;
+    place-items: center;
+}
+
+.services__container .service__Card .service__img img {
+    width: 60px;
+    border-radius: 50px;
+}

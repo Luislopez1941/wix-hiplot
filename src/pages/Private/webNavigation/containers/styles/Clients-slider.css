@@ -1,0 +1,364 @@
+:root {
+  --animation-duration: 40s;
+  --logo-height: 60px;
+  --gap-size: 2rem;
+}
+
+/* Main container */
+.clients-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+  background: #002539;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.clients-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.clients-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.75rem 0;
+  position: relative;
+}
+
+.clients-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border-radius: 2px;
+}
+
+.clients-subtitle {
+  font-size: 1.125rem;
+  color: #64748b;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Slider wrapper */
+.clients-wrapper {
+  position: relative;
+  overflow: hidden;
+  padding: 2rem 0;
+  margin: 2rem 0;
+}
+
+/* Marquee container */
+.clients-marquee {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  width: 100%;
+}
+
+.clients-marquee.paused .marquee-track {
+  animation-play-state: paused;
+}
+
+.clients-marquee.grayscale .client-logo {
+  filter: grayscale(100%) opacity(0.7);
+  transition: all 0.3s ease;
+}
+
+.clients-marquee.grayscale .client-item:hover .client-logo {
+  filter: grayscale(0%) opacity(1);
+  transform: scale(1.05);
+}
+
+/* Marquee track - this is the moving element */
+.marquee-track {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-size);
+  animation: scroll-left var(--animation-duration) linear infinite;
+  will-change: transform;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Client items */
+.client-item {
+  flex-shrink: 0;
+  width: 150px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.client-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  padding: 1rem;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.client-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.client-logo {
+  max-width: 100%;
+  max-height: var(--logo-height);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+/* Name overlay */
+.client-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0 0 12px 12px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.client-card:hover .client-overlay {
+  transform: translateY(0);
+}
+
+.client-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  display: block;
+}
+
+/* Gradient masks */
+.gradient-left,
+.gradient-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.gradient-left {
+  left: 0;
+  background: linear-gradient(to right, #f8fafc, transparent);
+}
+
+.gradient-right {
+  right: 0;
+  background: linear-gradient(to left, #f8fafc, transparent);
+}
+
+/* Stats section */
+.clients-stats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.stat-item {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3b82f6;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .clients-container {
+    padding: 2rem 1rem;
+    margin: 1rem;
+  }
+
+  .clients-title {
+    font-size: 2rem;
+  }
+
+  .clients-subtitle {
+    font-size: 1rem;
+  }
+
+  :root {
+    --logo-height: 50px;
+    --gap-size: 1.5rem;
+  }
+
+  .client-item {
+    width: 120px;
+    height: 80px;
+  }
+
+  .clients-stats {
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .clients-container {
+    padding: 1.5rem 0.5rem;
+  }
+
+  .clients-title {
+    font-size: 1.75rem;
+  }
+
+  :root {
+    --logo-height: 40px;
+    --gap-size: 1rem;
+  }
+
+  .client-item {
+    width: 100px;
+    height: 70px;
+  }
+
+  .clients-stats {
+    gap: 1.5rem;
+  }
+
+  .clients-header {
+    margin-bottom: 2rem;
+  }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .clients-container {
+ background: #002539;
+  }
+
+  .clients-title {
+    color: white;
+  }
+
+  .clients-subtitle {
+    color: #94a3b8;
+  }
+
+  .client-card {
+    background: #334155;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .client-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  }
+
+  .gradient-left {
+    background: linear-gradient(to right, #1e293b, transparent);
+  }
+
+  .gradient-right {
+    background: linear-gradient(to left, #1e293b, transparent);
+  }
+
+  .clients-stats {
+    border-top-color: #334155;
+  }
+
+  .stat-label {
+    color: #94a3b8;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation-play-state: paused;
+  }
+
+  .client-card:hover {
+    transform: none;
+  }
+
+  .clients-marquee.grayscale .client-item:hover .client-logo {
+    transform: none;
+  }
+}
+
+/* Shine effect */
+.client-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s ease;
+  border-radius: 12px;
+}
+
+.client-card:hover::before {
+  left: 100%;
+}
+
+/* Performance optimizations */
+.marquee-track {
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.client-item {
+  transform: translateZ(0);
+}

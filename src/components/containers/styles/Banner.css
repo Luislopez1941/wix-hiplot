@@ -1,0 +1,23 @@
+.banner_web {
+    width: 100%;
+    background-position: center;
+    background-size: cover;
+}
+
+.default__class_services {
+    width: 100%;
+}
+
+.banner_web .title__container {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto;
+    height: 100%;
+}
+
+.banner_web .title__container .title__content {
+    width: 100%;
+}
+
+

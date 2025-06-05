@@ -1,0 +1,259 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+:root {
+
+  /* Base colors */
+  --primary-color: #3D85C6;
+  --secundary-color: #53539f;
+
+    /* colores generales  */
+    --input-color:#ffffff;
+    --close-color: #090d1f;
+    --background-select-content: #fff;
+    --background-hover-select: #3D85C6;
+  
+    --cards-background:  #f2f2f2;
+  
+
+
+}
+
+
+body {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  background-color: #ffffff;
+
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+
+}
+
+input {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  /* font-size: 1rem; */
+
+
+}
+
+button {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+}
+
+a {
+  font-family: 'Poppins', sans-serif;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+input::placeholder{
+  color: var(--placeholder-color);
+} 
+
+textarea {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+}
+
+select {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+}
+
+option {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+}
+
+
+
+
+
+
+
+
+
+/* STYLES OF SELECT */
+
+::selection{
+	
+}
+.select__container {
+width: 100%;
+position: relative;
+text-align: left;
+}
+
+
+.select__container .search input{
+padding: 10px 0;
+width: 100%;
+outline: none;
+border-radius: 5px;
+text-indent: 15px;
+border: 2px solid #B3B3B3;
+}
+/* .select__container .search input:focus{
+border: 2px solid #1F319D;
+} */
+.select__container .search input::placeholder{
+color: #bfbfbf;
+} 
+
+.select-btn__general.warning {
+margin-top: 5px;
+}
+
+.select__container .select-btn, li{
+display: flex;
+align-items: center;
+cursor: pointer;
+}
+
+.select__container .select-btn {
+height: 40px;
+padding: 0 20px;
+background: var(--input-color);
+color: var(--text-color-ligth);
+border-radius: 5px 5px 5px 5px;
+justify-content: space-between;
+/* box-shadow: 0 10px 25px rgba(0,0,0,0.1); */
+}
+
+
+.select__container_title  {
+  overflow: hidden;
+  width: 90%;
+
+}
+
+
+.select__container_title p {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+
+
+.select__container .select-btn.active {
+  border-radius: 5px 5px 0 0;
+}
+
+
+
+
+.select__container .search .chevron__down {
+  top: 50%;
+  left: 15px;
+  color: var(--text-color-ligth);
+  pointer-events: none;
+  transform: translateY(-50%);
+  position: absolute;
+}
+  
+
+.select__container .select-btn .chevron__down {
+  transition: transform 0.3s linear;
+}
+.select__container .select-btn.active .chevron__down {
+  transform: rotate(-180deg);
+}
+
+.select__container .content {
+  position: absolute;
+  /* top: 70px; */
+  width: 100%;
+  height: 0;
+  background: var(--input-color);
+
+  border-radius: 0 0 5px 5px;
+  z-index: 1;
+  transition: all 500ms;
+  padding: 0 10px 0 10px;
+
+
+}
+
+.select__container .content .inputs__general {
+  display: none;
+
+
+}
+
+.select__container .content.active .inputs__general {
+  display: block;
+
+}
+
+.select__container .content.active{
+  height: 260px;
+  max-height: 280px;
+  padding: 5px 10px 5px 10px;
+}
+
+
+.select__container .options {
+  height: 0;
+  transition: opacity 300ms;
+  margin-top: 10px;
+  max-height: 250px;
+  overflow: auto;
+  padding-right: 7px;
+  color: var(--text-color-ligth);
+}
+
+.select__container .options.active {
+  height: 230px;
+}
+.select__container .options::-webkit-scrollbar{
+  width: 7px;
+}
+.select__container .options::-webkit-scrollbar-track{
+background: #f1f1f1;
+border-radius: 25px;
+}
+.select__container .options::-webkit-scrollbar-thumb{
+background: #ccc;
+border-radius: 25px;
+}
+.select__container .options::-webkit-scrollbar-thumb:hover{
+background: #b3b3b3;
+}
+.select__container .options li{
+height: 40px;
+padding: 0 13px;
+color: var(--text-color-ligth);
+
+}
+.select__container .options li:hover, li.selected{
+border-radius: 5px;
+background-color: var(--background-hover-select);
+color: var(--text-color);
+color: var(--white-color);
+}
+
+.select-btn p:focus{
+  background-color: var(--background-hover-select);
+
+}
+
+
+.chevron__down {
+  fill: var(--text-color-ligth);
+}
+
+.select-btn__general {
+  margin-top: 10px;
+}
