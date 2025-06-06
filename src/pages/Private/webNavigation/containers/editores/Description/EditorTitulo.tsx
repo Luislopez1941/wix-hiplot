@@ -98,21 +98,18 @@ const EditorTitulo = ({ typeName, update, indexEditSection, selectedTypeSection 
       }
       return x
     })
-
     setSections(data)
     setTextAlign(alignment)
   }
 
   const handleTitleContainerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value)
-
     const data = sections?.map((x: any, index: number) => {
       if (index === indexEditSection) {
         return { ...x, seccion: e.target.value }
       }
       return x
     })
-
     setSections(data)
   }
 

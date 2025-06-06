@@ -1003,8 +1003,7 @@ const WebNavigation = () => {
     multiple: false,
   });
 
-  console.log(containers)
-
+  console.log('dataEditContainer', dataEditContainer)
 
   return (
     <div className="web_page">
@@ -1266,7 +1265,7 @@ const WebNavigation = () => {
                   <div>
                     <p>Descripcion</p>
                     <div className="container__change_banner_create" onClick={() => saveContainer(3)} style={{ backgroundImage: `url(${desc})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                      <div >
+                      <div>
                         <b><p className="file__input_text">Agregar</p></b>
                       </div>
                       {/* <label for="file-upload1" class="custom-file-upload">
@@ -1290,7 +1289,7 @@ const WebNavigation = () => {
                   <div>
                     <p>Carrucel</p>
                     <div className="container__change_banner_create" onClick={() => saveContainer(5)} style={{ backgroundImage: `url(${car})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                      <div >
+                      <div>
                         <b><p className="file__input_text">Agregar</p></b>
                       </div>
                       {/* <label for="file-upload1" class="custom-file-upload">
@@ -1431,26 +1430,21 @@ const WebNavigation = () => {
                         <EditorImage typeName={'input_services_image'} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
                         <div className="item_web-page">
                           <p>Titulo</p>
-                          <EditorTitleContainers typeName={'input_services_'} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
-
+                          <EditorTitleContainers typeName={'input_services_'} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService}/>
                         </div>
                         <div className="item_web-page">
                           <p>Descripción</p>
-
+                          <EditorDescriptionContainers />
                         </div>
-
                       </div>
                       :
                       ''
                     }
                     {containers.tipo_contenedor === 4 ?
-
                       <div>
                         <div>
                           <p>EN DESARROLLO...(Solo agrega una imagen)</p>
                           <div className="item_web-page">
-
-
                           </div>
                         </div>
                         <div>
@@ -2075,7 +2069,6 @@ const WebNavigation = () => {
                           <div key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
                         ))}
                       </section>
-                    
                   </div> */}
                 <div className="footer-bottom">
                   <small>© Desarrollado por Hiplot Business. <span id="year"></span>, Todos los derechos reservados</small>

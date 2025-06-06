@@ -183,7 +183,6 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
             }
             return item;
           });
-
           return {
             ...x,
             contenido: updatedSubItems
@@ -192,7 +191,6 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
         return x;
       });
       setContainers(data);
-
     } else {
       const data = containers?.map((x: any, index: number) => {
         if (index === dataEditContainer?.index) {
@@ -203,12 +201,7 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
         }
         return x;
       });
-
-
       setContainers(data);
-
-
-
     }
   };
 

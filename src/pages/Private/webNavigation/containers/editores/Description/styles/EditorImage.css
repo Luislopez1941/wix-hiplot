@@ -3,3 +3,8 @@
     border-radius: 5px;
     padding: 10px;
 }
+
+.container__change_banner_update .image {
+    width: 100px;
+    height: 100px;
+}

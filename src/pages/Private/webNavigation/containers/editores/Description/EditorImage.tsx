@@ -242,12 +242,8 @@ const EditorImage = ({ typeName, dataEditContainer, indexEditSection, selectedTy
         }
         return x;
       });
-
-
       setContainers(data);
     }
-
-
   }
 
 
@@ -259,12 +255,16 @@ const EditorImage = ({ typeName, dataEditContainer, indexEditSection, selectedTy
         <div className="row__one">
           <div>
             <p>Imagen</p>
-            <div className="container__change_banner_update item_web-page" style={{ backgroundImage: `url(${dataEditContainer?.item?.contenido[dataEditContainer.index]?.image})` }}>
+            <div className="container__change_banner_update item_web-page" >
+              <div className='image' style={{ backgroundImage: `url(${dataEditContainer?.item?.contenido[dataEditContainer.index]?.image})` }}>
+
+              </div>
               <label className="custom-file-upload">
                 <small> Seleccionar archivo</small>
                 <input id="file-upload1" type="file" onChange={handleImageChange} />
               </label>
             </div>
+
           </div>
         </div>
         <div>
