@@ -1,12 +1,7 @@
 import React, { useState } from 'react'
 import './Services.css'
-import display from '../../assets/displays.svg'
-import reconocimientos from '../../assets/reconocimientos.svg'
-import gafetes from '../../assets/gafetes.svg'
 
 const Services: React.FC = ({item}: any) => {
-   
-
     return (
         <div className='services'>
             <div className='services__container'>
@@ -17,9 +12,6 @@ const Services: React.FC = ({item}: any) => {
                         </div>
                         <p>{item.title}</p>
                         <p>{item.description}</p>
-                        <div>
-                            <button>ver más</button>
-                        </div>
                     </div>
                 ))}
             </div>

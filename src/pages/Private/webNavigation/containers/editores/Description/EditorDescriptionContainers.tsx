@@ -62,25 +62,40 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
   const handleFontWeightChange = (font: any) => {
     setSelectedTypeFontWeight(font.id);
     setSelectTypesFontWeight(false);
+    if (subItems) {
+      const data = containers?.map((x: any, index: number) => {
+        if (index === dataEditContainer?.index) {
+          const updatedSubItems = x.contenido.map((item: any, indexTwo: number) => {
+            if (dataNumberService.index === indexTwo) {
+              return {
+                ...item,
+                styles: {
+                  ...item?.styles,
+                  description: {
+                    ...item?.style?.description,
+                    FontWeight: font.name
+                  }
+                }
+              };
+
+            }
+            return item;
+          });
+
+          return {
+            ...x,
+            contenido: updatedSubItems
+          };
+        }
+        return x;
+      });
+      setContainers(data);
+    }
   };
 
 
   const changeTextColor = (color: string) => {
-    const data = containers?.map((x: any, index: number) => {
-      if (index === indexEditSection) {
-        return {
-          ...x,
-          imagen: {
-            ...x.imagen,
-            color: color
-          }
-        };
-      }
-      return x;
-    });
-
-    setContainers(data);
-    // setSelectedColor(color);
+    fontSize
   };
 
   const handleIconClick = () => {
@@ -89,19 +104,35 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
 
   const changeFontSize = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFontSize(Number(e.target.value));
-    const data = containers?.map((x: any, index: number) => {
-      if (index === dataEditContainer?.index) {
-        return {
-          ...x,
-          style: {
-            ...x.style,
-            fontSize: e.target.value
-          }
-        };
-      }
-      return x;
-    });
-    setContainers(data);
+    if (subItems) {
+      const data = containers?.map((x: any, index: number) => {
+        if (index === dataEditContainer?.index) {
+          const updatedSubItems = x.contenido.map((item: any, indexTwo: number) => {
+            if (dataNumberService.index === indexTwo) {
+              return {
+                ...item,
+                styles: {
+                  ...item?.styles,
+                  description: {
+                    ...item?.style?.description,
+                    FontSize: Number(e.target.value)
+                  }
+                }
+              };
+
+            }
+            return item;
+          });
+
+          return {
+            ...x,
+            contenido: updatedSubItems
+          };
+        }
+        return x;
+      });
+      setContainers(data);
+    }
   };
 
   const textCentering = (alignment: string) => {
@@ -179,9 +210,6 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
 
 
     }
-
-
-    console.log('containers', dataEditContainer)
   };
 
 

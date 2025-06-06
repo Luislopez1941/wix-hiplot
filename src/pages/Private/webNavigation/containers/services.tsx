@@ -32,12 +32,12 @@ const services = ({ editServices, item, index }: any) => {
               </div>
             </div>
             <div>
-              <div className='item' style={{textAlign: item?.styles?.title?.textAling}}>
+              <div className='item' style={{textAlign: item?.styles?.title?.textAling, fontSize: item?.styles?.title?.FontSize, fontWeight: item?.styles?.title?.FontWeight}}>
                 {item.title}
               </div>
             </div>
             <div>
-              <div className='item' style={{textAlign: item?.styles?.description?.textAling}}>
+              <div className='item' style={{textAlign: item?.styles?.description?.textAling, fontSize: item?.styles?.description?.FontSize, fontWeight: item?.styles?.description?.FontWeight}}>
                 {item.description}
               </div>
             </div>
