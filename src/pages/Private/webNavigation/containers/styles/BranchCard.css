@@ -1,0 +1,198 @@
+/* Branch Card Styles */
+.branch-card {
+  max-width: 384px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.branch-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.branch-card-content {
+  padding: 24px;
+}
+
+/* Branch Image */
+.branch-image-container {
+  position: relative;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.branch-image-wrapper {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid rgba(0, 40, 56, 0.2);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.branch-card:hover .branch-image-wrapper {
+  border-color: rgba(0, 40, 56, 0.4);
+}
+
+.branch-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.branch-card:hover .branch-image {
+  transform: scale(1.1);
+}
+
+/* Branch Info */
+.branch-info {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.branch-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #002539;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
+
+.branch-address {
+  color: #4b5563;
+  font-size: 14px;
+  line-height: 1.625;
+  padding: 0 8px;
+}
+
+/* Button Containers */
+.branch-info-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.branch-contact-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* Buttons */
+.branch-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 500;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: nowrap;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.branch-button:hover {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* Primary buttons (Ubicación y Horarios) */
+.branch-button-primary {
+  background-color: #002539;
+  color: white;
+}
+
+.branch-button-primary:hover {
+  background-color: rgba(0, 40, 56, 0.9);
+}
+
+/* Orange button (Llamar) */
+.branch-button-orange {
+  background-color: #ea5234;
+  color: white;
+}
+
+.branch-button-orange:hover {
+  background-color: #dc2626;
+}
+
+/* Green button (WhatsApp) */
+.branch-button-green {
+  background-color: #10b981;
+  color: white;
+}
+
+.branch-button-green:hover {
+  background-color: #059669;
+}
+
+/* Button icons */
+.branch-button-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Hover effect background */
+.branch-card-hover-effect {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    rgba(0, 40, 56, 0.05),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.branch-card:hover .branch-card-hover-effect {
+  opacity: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .branch-card-content {
+    padding: 20px;
+  }
+
+  .branch-image-wrapper {
+    width: 112px;
+    height: 112px;
+  }
+
+  .branch-name {
+    font-size: 18px;
+  }
+
+  .branch-address {
+    font-size: 13px;
+  }
+
+  .branch-button {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+}

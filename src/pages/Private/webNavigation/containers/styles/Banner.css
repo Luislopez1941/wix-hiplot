@@ -1,24 +1,349 @@
 .banner_web {
-    width: 100%;
-    height: 400px;
-    background-position: center;
-    background-size: cover;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
 }
 
-.default__class_services {
-    width: 100%;
+.banner-slides-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
-.banner_web .title__container {
-    display: flex;
-    align-items: center;
-    width: 90%;
-    margin: 0 auto;
-    height: 100%;
+.banner-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.banner_web .title__container .title__content {
-    width: 100%;
+.banner-slide.active {
+  opacity: 1;
+}
+
+.banner-slide.slide-1 {
+  background: linear-gradient(135deg, rgba(0, 37, 57, 0.8) 0%, rgba(0, 26, 41, 0.8) 100%);
+}
+
+.banner-slide.slide-2 {
+  background: linear-gradient(135deg, rgba(0, 37, 57, 0.7) 0%, rgba(0, 61, 92, 0.7) 100%);
+}
+
+.banner-slide.slide-3 {
+  background: linear-gradient(135deg, rgba(0, 37, 57, 0.7) 0%, rgba(0, 26, 41, 0.7) 100%);
+}
+
+.banner-slide.slide-4 {
+  background: linear-gradient(135deg, rgba(0, 37, 57, 0.8) 0%, rgba(0, 16, 20, 0.8) 100%);
+}
+
+.banner-slide-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+.banner-slide-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.banner-background-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.banner-background-pattern::before,
+.banner-background-pattern::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  filter: blur(60px);
+}
+
+.banner-background-pattern::before {
+  top: 20%;
+  left: 10%;
+  width: 200px;
+  height: 200px;
+}
+
+.banner-background-pattern::after {
+  bottom: 20%;
+  right: 10%;
+  width: 300px;
+  height: 300px;
+}
+
+.title__container {
+  display: flex;
+  align-items: center;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100%;
+  position: relative;
+  z-index: 10;
+  padding: 0 2rem;
+}
+
+.title__content {
+  text-align: center;
+  color: white;
+  animation: slideInContent 1s ease-out;
+}
+
+.banner-subtitle {
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.banner-title {
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+.banner-description {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  opacity: 0.95;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.banner-button {
+  background: white;
+  color: #1f2937;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.8s ease-out 0.8s both;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.banner-button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Navigation */
+.banner-navigation {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0;
+  backdrop-filter: blur(10px);
+  z-index: 20;
+}
+
+.banner_web:hover .banner-navigation {
+  opacity: 1;
+}
+
+.banner-navigation:hover {
+  background: rgba(0, 0, 0, 0.5);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.banner-navigation.prev {
+  left: 2rem;
+}
+
+.banner-navigation.next {
+  right: 2rem;
+}
+
+/* Dots Navigation */
+.banner-dots {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.75rem;
+  z-index: 20;
+}
+
+.banner-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.banner-dot.active {
+  background: white;
+  transform: scale(1.3);
+}
+
+.banner-dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.1);
 }
 
 
+/* Progress Bar */
+.banner-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 20;
+}
+
+.banner-progress-bar {
+  height: 100%;
+  background: white;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* Slide Counter */
+.banner-counter {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 20;
+}
+
+.banner_web:hover .banner-counter {
+  opacity: 1;
+}
+
+/* Animations */
+@keyframes slideInContent {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .banner-title {
+    font-size: 2.5rem;
+  }
+
+  .banner-description {
+    font-size: 1rem;
+  }
+
+  .title__container {
+    padding: 0 1rem;
+  }
+
+  .banner-navigation {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .banner-navigation.prev {
+    left: 1rem;
+  }
+
+  .banner-navigation.next {
+    right: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-title {
+    font-size: 2rem;
+  }
+
+  .banner-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .banner-description {
+    font-size: 0.95rem;
+  }
+
+  .banner-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+}

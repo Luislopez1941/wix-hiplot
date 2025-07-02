@@ -32,4 +32,15 @@
     border: none;
     font-size: 14px;
     cursor: pointer;
+}     
+
+.btn_admin {
+    display: flex;
+}
+
+.btn_admin > a {
+    background-color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 10px;
 }

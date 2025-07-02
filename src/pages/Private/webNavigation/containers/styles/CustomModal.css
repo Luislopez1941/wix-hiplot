@@ -1,0 +1,207 @@
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 448px;
+  position: relative;
+  animation: modalFadeIn 0.2s ease-out;
+  transform-origin: center;
+}
+
+/* Close Button */
+.modal-close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  z-index: 10;
+}
+
+.modal-close-button:hover {
+  background-color: #f3f4f6;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 24px;
+  padding-top: 48px;
+}
+
+/* Location Modal Styles */
+.location-title {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.location-title h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ea5234;
+  margin-bottom: 16px;
+  margin: 0;
+}
+
+.location-address {
+  color: #ea5234;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.location-icon-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.location-icon {
+  background-color: #ea5234;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 24px 0;
+}
+
+.contact-info {
+  text-align: center;
+}
+
+.contact-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ea5234;
+  margin-bottom: 12px;
+  margin: 0 0 12px 0;
+}
+
+.contact-icon-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.contact-icon {
+  background-color: #ea5234;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-phone {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ea5234;
+  margin: 0;
+}
+
+/* Schedule Modal Styles */
+.schedule-title {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.schedule-title h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ea5234;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.schedule-divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin-bottom: 32px;
+}
+
+.schedule-info {
+  text-align: center;
+}
+
+.schedule-weekdays {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ea5234;
+  margin-bottom: 16px;
+  margin: 0 0 16px 0;
+}
+
+.schedule-hours {
+  font-size: 28px;
+  font-weight: 700;
+  color: #002539;
+  margin: 0;
+}
+
+/* Animation */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: 12px;
+  }
+
+  .modal-body {
+    padding: 20px;
+    padding-top: 44px;
+  }
+
+  .location-title h2,
+  .schedule-title h2 {
+    font-size: 24px;
+  }
+
+  .contact-phone,
+  .schedule-hours {
+    font-size: 24px;
+  }
+}

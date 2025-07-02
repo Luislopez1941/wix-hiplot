@@ -3,9 +3,9 @@ import { editorContainerStore } from "../../../../../../zustand/web-page/EditorC
 import FontWeight from './fontWeight.json';
 import { useWebStore } from "../../../../../../zustand/web-page/StoreWebPage";
 import './styles/EditorContainer.css'
-import { style } from "framer-motion/client";
 
-const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSection, selectedTypeSection, dataNumberService, index, subItems }: any) => {
+
+const EditorDescriptionContainers = ({ typeName, dataEditContainer, selectedTypeSection, dataNumberService, subItems }: any) => {
 
   const { containers }: any = useWebStore();
   const setContainers = useWebStore(state => state.setContainers)
@@ -16,7 +16,7 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
 
   const [selectTypesFontWeight, setSelectTypesFontWeight] = useState(false);
   const [selectedTypeFontWeight, setSelectedTypeFontWeight] = useState(instanceData.fontWeight || 400);
-  const [selectedColor, setSelectedColor] = useState(instanceData.color || "#000000");
+  const [selectedColor] = useState(instanceData.color || "#000000");
   const [fontSize, setFontSize] = useState(instanceData.fontSize || 14);
   const [textAlign, setTextAlign] = useState(instanceData.textAlign || "left");
   const [content, setContent] = useState(instanceData.content || "");
@@ -70,14 +70,10 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
               return {
                 ...item,
                 styles: {
-                  ...item?.styles,
-                  description: {
-                    ...item?.style?.description,
-                    FontWeight: font.name
-                  }
+                  ...(item?.styles || {}),
+                  font_weight_description: font.name
                 }
               };
-
             }
             return item;
           });
@@ -89,13 +85,72 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
         }
         return x;
       });
-      setContainers(data);
+      setContainers(data)
+    } else {
+      const data = containers?.map((x: any, index: number) => {
+        if (index === dataEditContainer?.index) {
+          return {
+            ...x,
+            style: {
+              ...x.style,
+              description: {
+                ...x.style.title,
+                fontWeight: font.name,
+              },
+            },
+          }
+        }
+        return x
+      })
+      setContainers(data)
     }
   };
 
 
   const changeTextColor = (color: string) => {
-    fontSize
+    if (subItems) {
+      const data = containers?.map((x: any, index: number) => {
+        if (index === dataEditContainer?.index) {
+          const updatedSubItems = x.contenido.map((item: any, indexTwo: number) => {
+            if (dataNumberService.index === indexTwo) {
+              return {
+                ...item,
+                styles: {
+                  ...(item?.styles || {}),
+                  color_description: color
+                }
+              };
+            }
+            return item;
+          });
+
+          return {
+            ...x,
+            contenido: updatedSubItems
+          };
+        }
+        return x;
+      });
+      setContainers(data)
+
+    } else {
+      const data = containers?.map((x: any, index: number) => {
+        if (index === dataEditContainer?.index) {
+          return {
+            ...x,
+            style: {
+              ...x.style,
+              title: {
+                ...x.style.title,
+                color: color,
+              },
+            },
+          }
+        }
+        return x
+      })
+      setContainers(data)
+    }
   };
 
   const handleIconClick = () => {
@@ -112,14 +167,10 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
               return {
                 ...item,
                 styles: {
-                  ...item?.styles,
-                  description: {
-                    ...item?.style?.description,
-                    FontSize: Number(e.target.value)
-                  }
+                  ...(item?.styles || {}),
+                  font_size_description: Number(e.target.value)
                 }
               };
-
             }
             return item;
           });
@@ -131,7 +182,24 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
         }
         return x;
       });
-      setContainers(data);
+      setContainers(data)
+    } else {
+      const data = containers?.map((x: any, index: number) => {
+        if (index === dataEditContainer?.index) {
+          return {
+            ...x,
+            style: {
+              ...x.style,
+              description: {
+                ...x.style.description,
+                fontSize: Number(e.target.value),
+              },
+            },
+          }
+        }
+        return x
+      })
+      setContainers(data)
     }
   };
 
@@ -144,14 +212,10 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
               return {
                 ...item,
                 styles: {
-                  ...item?.styles,
-                  description: {
-                    ...item?.style?.description,
-                    textAling: alignment
-                  }
+                  ...(item?.styles || {}),
+                  text_aling_description: alignment
                 }
               };
-
             }
             return item;
           });
@@ -163,7 +227,25 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
         }
         return x;
       });
+      setContainers(data)
       setContainers(data);
+    } else {
+      const data = containers?.map((x: any, index: number) => {
+        if (index === dataEditContainer?.index) {
+          return {
+            ...x,
+            style: {
+              ...x.style,
+              description: {
+                ...x.style.description,
+                textAlign: alignment,
+              },
+            },
+          }
+        }
+        return x
+      })
+      setContainers(data)
     }
     setTextAlign(alignment.replace("text_align-", ""));
   };
@@ -183,6 +265,7 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
             }
             return item;
           });
+
           return {
             ...x,
             contenido: updatedSubItems
@@ -312,7 +395,7 @@ const EditorDescriptionContainers = ({ typeName, dataEditContainer, indexEditSec
                 type="range"
                 min="200"
                 max="1000"
-                value={style.heightContainer}
+                 value={styles.heightContainer}
                 onChange={containerEditor}
                 className="slider__editor_wep-page"
               />

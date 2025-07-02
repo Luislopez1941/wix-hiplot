@@ -1,70 +1,71 @@
 .services__web-page {
-
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.services__web-page .row__one_web {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: 90%;
-    margin: 0 auto;
-    gap: 20px;
-    padding: 10px 0;
-    height: auto;
+.row__one_web {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  margin: 0 auto;
+  transition: all 0.3s ease;
 }
 
-.item__service > p {
-    box-sizing: border-box;
-    height: 100%;
-    overflow-y: auto;
-    tab-size: 4;
-    -moz-tab-size: 4;
-    white-space: pre-wrap;
-    word-wrap: break-word;
+.item__service {
+  background-color: #f6f6f6;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.services__web-page .row__one_web .item__service {
-    background-color: #f6f6f6;
-    border-radius: 10px;
-    padding: 20px;
-}
-
-.services__web-page .row__one_web .item__service:hover {
-    outline: 2px solid var(--primary-color);
+.item__service:hover {
+  outline: 2px solid var(--primary-color, #007bff);
 }
 
 .container__services_img_web-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
- 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .container__services_img_web-page > div {
-    width: 60px;
-    height: 60px;
-   
-
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
 }
 
-
-
-
-.services__web-page .row__one_web .item__service .default__class_services {
-    text-align: center;
-    font-weight: 500;
-    padding: 10px 0;
- 
+.container__services_img_web-page img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
-.services__web-page .row__one_web .item__service p {
-  
-
+.default__class_services {
+  text-align: center;
+  font-weight: 500;
+  padding: 10px 0;
 }
 
+.item__description {
+  color: #444;
+  font-size: 14px;
+  line-height: 1.5;
+  padding-top: 10px;
+}
 
+/* ✅ MEDIA QUERIES PARA RESPONSIVE */
 
-.item__service .item {
-    overflow: hidden; 
-    word-wrap: break-word;
+@media screen and (max-width: 1024px) {
+  .row__one_web {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
+@media screen and (max-width: 600px) {
+  .row__one_web {
+    grid-template-columns: 1fr;
+  }
 }

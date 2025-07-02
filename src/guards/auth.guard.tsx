@@ -1,19 +1,17 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { PrivateRoutes, PublicRoutes } from "../models/routes"; // Importa PrivateRoutes y PublicRoutes
-import useUserStore from "../zustand/General"; 
+import useUserStore from "../zustand/General";
 
 interface Props {
     privateValidation: boolean;
 }
 
-
-
 const PrivateValidationFragment = <Outlet />;
-const PublicValidationFragment = <Navigate replace to={PrivateRoutes.PRIVATE} />
+const PublicValidationFragment = <Navigate replace to={PrivateRoutes.CRM} />
 
 export const AuthGuard = ({ privateValidation }: Props) => {
-    const userState = true;
-    return userState ? (
+    const userState = useUserStore(state => state.user);;
+    return userState?.id ? (
         privateValidation ? (
             PrivateValidationFragment
         ) : (

@@ -1,0 +1,272 @@
+.footer {
+  padding: 4rem 1.5rem;
+  border-top: 1px solid rgba(51, 65, 85, 0.6);
+  background-color: #002539;
+}
+
+.footer-container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer-grid {
+  display: grid;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+  .footer-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+.company-info {
+  /* Grid layout handles the span */
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.logo-icon-wrapper {
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(135deg, #7dd3fc 0%, #3b82f6 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(125, 211, 252, 0.3);
+}
+
+.logo-icon-inner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid #002539;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff 0%, #7dd3fc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.025em;
+}
+
+.company-description {
+  color: #cbd5e1;
+  margin-bottom: 2rem;
+  max-width: 28rem;
+  line-height: 1.7;
+  font-size: 0.9375rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-link {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: rgba(51, 65, 85, 0.8);
+  border: 1px solid rgba(71, 85, 105, 0.6);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: #94a3b8;
+  text-decoration: none;
+}
+
+.social-link:hover {
+  background-color: rgba(71, 85, 105, 0.9);
+  border-color: rgba(125, 211, 252, 0.5);
+  color: #7dd3fc;
+  transform: translateY(-1px);
+}
+
+.social-link span {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.footer-column-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #7dd3fc;
+}
+
+.contact-list,
+.hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #94a3b8;
+  transition: color 0.2s ease;
+  text-decoration: none;
+  font-size: 0.9375rem;
+}
+
+.contact-item:hover {
+  color: #e2e8f0;
+}
+
+.contact-item svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #7dd3fc;
+  flex-shrink: 0;
+}
+
+.contact-item-address {
+  line-height: 1.5;
+}
+
+.hours-item {
+  display: flex;
+  justify-content: space-between;
+  color: #94a3b8;
+  font-size: 0.9375rem;
+}
+
+.emergency-hours {
+  margin-top: 1rem;
+  padding: 0.875rem;
+  background-color: rgba(125, 211, 252, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(125, 211, 252, 0.15);
+}
+
+.emergency-title {
+  color: #7dd3fc;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.emergency-text {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+}
+
+.bottom-bar {
+  border-top: 1px solid rgba(51, 65, 85, 0.6);
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .bottom-bar {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0;
+  }
+}
+
+.copyright {
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.copyright p {
+  margin: 0;
+}
+
+.legal-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.legal-link {
+  color: #94a3b8;
+  transition: color 0.2s ease;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.legal-link:hover {
+  color: #7dd3fc;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .footer {
+    padding: 3rem 1rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    text-align: center;
+  }
+
+  .logo-container {
+    justify-content: center;
+  }
+
+  .social-links {
+    justify-content: center;
+  }
+
+  .contact-item {
+    justify-content: center;
+  }
+
+  .hours-item {
+    justify-content: space-between;
+  }
+
+  .bottom-bar {
+    text-align: center;
+  }
+
+  .legal-links {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+/* Animation on load */
+.footer {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

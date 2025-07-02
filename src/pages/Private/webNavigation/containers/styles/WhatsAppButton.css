@@ -1,0 +1,164 @@
+/* WhatsApp Contact Component Styles
+
+.whatsapp-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.whatsapp-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+.whatsapp-menu-container {
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  z-index: 999;
+  animation: slideUp 0.3s ease-out;
+}
+
+.whatsapp-menu {
+  background-color: white;
+  border-radius: 15px;
+  padding: 20px;
+  width: 380px;
+  max-width: 90vw;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid #e0e0e0;
+}
+
+.whatsapp-menu-header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.whatsapp-menu-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.whatsapp-locations-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.whatsapp-location-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 10px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #e9ecef;
+}
+
+.whatsapp-location-card:hover {
+  background-color: #e8f5e8;
+  transform: translateY(-2px);
+}
+
+.whatsapp-location-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border: 3px solid #25d366;
+  flex-shrink: 0;
+}
+
+.whatsapp-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.whatsapp-location-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.whatsapp-icon-text {
+  font-size: 18px;
+}
+
+.whatsapp-location-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.whatsapp-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #25d366;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+  transition: all 0.2s ease;
+  color: white;
+}
+
+.whatsapp-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+}
+
+.whatsapp-svg-icon {
+  width: 32px;
+  height: 32px;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@media (max-width: 768px) {
+  .whatsapp-menu {
+    width: 320px;
+  }
+
+  .whatsapp-location-card {
+    padding: 12px;
+  }
+
+  .whatsapp-location-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 12px;
+  }
+
+  .whatsapp-location-name {
+    font-size: 14px;
+  }
+} */

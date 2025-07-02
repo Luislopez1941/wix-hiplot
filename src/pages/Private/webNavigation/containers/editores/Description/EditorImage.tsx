@@ -1,11 +1,8 @@
-import { useEffect, useState, useRef } from "react";
-import { editorContainerStore } from "../../../../../../zustand/web-page/EditorContainer";
-import FontWeight from './fontWeight.json';
+import { useState, useRef } from "react";
 import { useWebStore } from "../../../../../../zustand/web-page/StoreWebPage";
 import './styles/EditorImage.css'
-import { style } from "framer-motion/client";
 
-const EditorImage = ({ typeName, dataEditContainer, indexEditSection, selectedTypeSection, dataNumberService, index, subItems }: any) => {
+const EditorImage = ({ dataEditContainer, dataNumberService, subItems }: any) => {
 
   const { containers }: any = useWebStore();
   const setContainers = useWebStore(state => state.setContainers)
@@ -274,7 +271,7 @@ const EditorImage = ({ typeName, dataEditContainer, indexEditSection, selectedTy
               <input
                 type="range"
                 min="1"
-                max="50"
+                max="500"
                 className="slider__editor_wep-page"
                 onChange={borderEditor}
               />

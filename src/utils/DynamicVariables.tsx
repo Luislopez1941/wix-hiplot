@@ -1,4 +1,5 @@
-import {Dispatch, SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+
 const DynamicVariables = {
     updateAnyVar: <T,>(setStateFunc: Dispatch<SetStateAction<T>>, key: keyof T, value: T[keyof T]) => {
         setStateFunc(prevState => ({

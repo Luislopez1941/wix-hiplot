@@ -4,6 +4,11 @@ const APIs = {
 
 
   // Editor de pagina web
+  login: async (email: string, password: string, customPath?: string) => {
+    const path = customPath || 'usuario_login';
+    return ConfigurationAPIs.post(path, { email, password });
+  },
+
 
   getWebPage: async (id: number, customPath?: string) => {
     const path = customPath || `pagina_cliente/get/${id}`;
@@ -111,6 +116,11 @@ const APIs = {
 
   getArticles: async (data: any, customPath?: string) => {
     const path = customPath || 'articulos_get';
+    return ConfigurationAPIs.post(path, data)
+  },
+
+  getArticlesForVendedor: async (data: any, customPath?: string) => {
+    const path = customPath || 'articulos_get_for_vendedor';
     return ConfigurationAPIs.post(path, data)
   },
 

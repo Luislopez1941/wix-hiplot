@@ -1,0 +1,131 @@
+/* Branch Section Container */
+.branch-section {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 64px 16px;
+  width: 100%;
+}
+
+/* Branch Grid */
+.branch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1280px;
+}
+
+.branch-grid-item {
+  display: flex;
+  justify-content: center;
+}
+
+/* Call to Action Section */
+.branch-cta {
+  margin-top: 64px;
+  text-align: center;
+}
+
+.branch-cta-content {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(4px);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 672px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #e5e7eb;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.branch-cta-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #002539;
+  margin-bottom: 16px;
+  margin: 0 0 16px 0;
+}
+
+.branch-cta-description {
+  color: #4b5563;
+  margin-bottom: 24px;
+  margin: 0 0 24px 0;
+  line-height: 1.6;
+}
+
+.branch-cta-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.branch-cta-button {
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.branch-cta-button:hover {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.branch-cta-button-primary {
+  background-color: #002539;
+  color: white;
+}
+
+.branch-cta-button-primary:hover {
+  background-color: rgba(0, 40, 56, 0.9);
+}
+
+.branch-cta-button-secondary {
+  background-color: #ea5234;
+  color: white;
+}
+
+.branch-cta-button-secondary:hover {
+  background-color: #dc2626;
+}
+
+/* Responsive Design */
+@media (min-width: 640px) {
+  .branch-cta-buttons {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 1024px) {
+  .branch-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .branch-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .branch-section {
+    padding: 48px 12px;
+  }
+
+  .branch-cta-content {
+    padding: 24px;
+  }
+
+  .branch-cta-title {
+    font-size: 24px;
+  }
+}

@@ -1,24 +1,24 @@
-"use client"
-
 import type React from "react"
 import { useRef, useEffect, useState } from "react"
 import "./styles/Carousel.css"
 import APIs from "../../../../services/services/APIs"
 import useUserStore from "../../../../zustand/General"
 
-interface Article {
+interface Article { 
   id: number
   nombre: string
   descripcion: string
   imagenes: Array<{ img_url: string }>
 }
 
+
+
 interface CarouselProps {
   selectedTypeFamily?: { id: number; nombre: string }
   item?: { id_familia: number; familia: string }
 }
 
-const ModernCarousel: React.FC<CarouselProps> = ({ selectedTypeFamily, item }) => {
+const ModernCarousel: React.FC<CarouselProps> = ({ selectedTypeFamily, item }: any) => {
   const carouselRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
@@ -37,15 +37,15 @@ const ModernCarousel: React.FC<CarouselProps> = ({ selectedTypeFamily, item }) =
         activos: true,
         nombre: "",
         codigo: "",
-        familia: selectedTypeFamily == undefined ? item?.id_familia : selectedTypeFamily.id,
+        familia: selectedTypeFamily == undefined ? item?.id_familia : selectedTypeFamily,
         proveedor: 0,
         materia_prima: 0,
         get_imagenes: true,
         page: 1,
-        id_usuario: user_id,
+        id_usuario: 3,
       }
 
-      const response = await APIs.getArticles(data)
+      const response: any = await APIs.getArticles(data)
       setArticles(response || [])
     } catch (error) {
       console.error("Error fetching articles:", error)
@@ -56,9 +56,7 @@ const ModernCarousel: React.FC<CarouselProps> = ({ selectedTypeFamily, item }) =
   }
 
   useEffect(() => {
-    if (user_id) {
-      fetchArticles()
-    }
+    fetchArticles()
   }, [selectedTypeFamily, user_id])
 
   const checkScrollButtons = () => {
@@ -94,7 +92,7 @@ const ModernCarousel: React.FC<CarouselProps> = ({ selectedTypeFamily, item }) =
 
   if (loading) {
     return (
-      <div className="carousel-container">
+      <div className="carousel-container" >
         <div className="carousel-header">
           <h2 className="carousel-title">{familyName}</h2>
           <div className="carousel-title-underline"></div>
@@ -118,104 +116,106 @@ const ModernCarousel: React.FC<CarouselProps> = ({ selectedTypeFamily, item }) =
   }
 
   return (
-    <div className="carousel-container">
-      {/* Header */}
-      <div className="carousel-header">
-        <h2 className="carousel-title">{familyName}</h2>
-        <div className="carousel-title-underline"></div>
-      </div>
-
-      {/* Carousel Container */}
-      <div className="carousel-wrapper">
-        {/* Navigation Buttons */}
-        <button
-          className={`nav-button nav-button-left ${!canScrollLeft ? "nav-button-disabled" : ""}`}
-          onClick={() => scroll("left")}
-          disabled={!canScrollLeft}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polyline points="15,18 9,12 15,6"></polyline>
-          </svg>
-        </button>
-
-        <button
-          className={`nav-button nav-button-right ${!canScrollRight ? "nav-button-disabled" : ""}`}
-          onClick={() => scroll("right")}
-          disabled={!canScrollRight}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polyline points="9,18 15,12 9,6"></polyline>
-          </svg>
-        </button>
-
-        {/* Carousel */}
-        <div ref={carouselRef} className="carousel-scroll">
-          {articles.map((article, index) => (
-            <div key={article.id || index} className="carousel-card">
-              {/* Image Container */}
-              <div className="card-image-container">
-                <div className="card-image-wrapper">
-                  {article.imagenes && article.imagenes[0] ? (
-                    <img
-                      src={`${img_url}/${article.imagenes[0].img_url.replace(/\\/g, "/")}`}
-                      alt={article.nombre}
-                      className="card-image"
-                      draggable="false"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement
-                        target.src = "/placeholder.svg?height=240&width=320&query=product+image"
-                      }}
-                    />
-                  ) : (
-                    <div className="card-image-placeholder">
-                      <img
-                        src="/placeholder.svg?height=240&width=320&query=product+placeholder"
-                        alt="Placeholder"
-                        className="card-image"
-                        draggable="false"
-                      />
-                    </div>
-                  )}
-                </div>
-                <div className="card-overlay"></div>
-              </div>
-
-              {/* Content */}
-              <div className="card-content">
-                <h3 className="card-title">{article.nombre}</h3>
-                <p className="card-description">{article.descripcion}</p>
-
-                {/* Action Button */}
-                <div className="card-action">
-                  <button className="card-button">Ver detalles</button>
-                </div>
-              </div>
-            </div>
-          ))}
+    <div className="carousel" style={{ backgroundColor: item?.style?.background_color }}>
+      <div className="carousel-container">
+        {/* Header */}
+        <div className="carousel-header">
+          <h2 className="carousel-title">{familyName}</h2>
+          <div className="carousel-title-underline"></div>
         </div>
 
-        {/* Scroll Indicators */}
-        {articles.length > 0 && (
-          <div className="scroll-indicators">
-            {Array.from({ length: Math.ceil(articles.length / 3) }).map((_, index) => (
-              <div key={index} className="scroll-indicator">
-                <div className="scroll-indicator-fill"></div>
+        {/* Carousel Container */}
+        <div className="carousel-wrapper">
+          {/* Navigation Buttons */}
+          <button
+            className={`nav-button nav-button-left ${!canScrollLeft ? "nav-button-disabled" : ""}`}
+            onClick={() => scroll("left")}
+            disabled={!canScrollLeft}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="15,18 9,12 15,6"></polyline>
+            </svg>
+          </button>
+
+          <button
+            className={`nav-button nav-button-right ${!canScrollRight ? "nav-button-disabled" : ""}`}
+            onClick={() => scroll("right")}
+            disabled={!canScrollRight}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="9,18 15,12 9,6"></polyline>
+            </svg>
+          </button>
+
+          {/* Carousel */}
+          <div ref={carouselRef} className="carousel-scroll">
+            {articles.map((article, index) => (
+              <div key={article.id || index} className="carousel-card">
+                {/* Image Container */}
+                <div className="card-image-container">
+                  <div className="card-image-wrapper">
+                    {article.imagenes && article.imagenes[0] ? (
+                      <img
+                        src={`${img_url}/${article.imagenes[0].img_url.replace(/\\/g, "/")}`}
+                        alt={article.nombre}
+                        className="card-image"
+                        draggable="false"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement
+                          target.src = "/placeholder.svg?height=240&width=320&query=product+image"
+                        }}
+                      />
+                    ) : (
+                      <div className="card-image-placeholder">
+                        <img
+                          src="/placeholder.svg?height=240&width=320&query=product+placeholder"
+                          alt="Placeholder"
+                          className="card-image"
+                          draggable="false"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div className="card-overlay"></div>
+                </div>
+
+                {/* Content */}
+                <div className="card-content">
+                  <h3 className="card-title">{article.nombre}</h3>
+                  <p className="card-description">{article.descripcion}</p>
+
+                  {/* Action Button */}
+                  <div className="card-action">
+                    <button className="card-button">Ver detalles</button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
+
+          {/* Scroll Indicators */}
+          {articles.length > 0 && (
+            <div className="scroll-indicators">
+              {Array.from({ length: Math.ceil(articles.length / 3) }).map((_, index) => (
+                <div key={index} className="scroll-indicator">
+                  <div className="scroll-indicator-fill"></div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Empty State */}
+        {!loading && articles.length === 0 && (
+          <div className="empty-state">
+            <div className="empty-state-icon">
+              <div className="empty-state-placeholder"></div>
+            </div>
+            <h3 className="empty-state-title">No hay productos disponibles</h3>
+            <p className="empty-state-description">Los productos aparecerán aquí cuando estén disponibles.</p>
+          </div>
         )}
       </div>
-
-      {/* Empty State */}
-      {!loading && articles.length === 0 && (
-        <div className="empty-state">
-          <div className="empty-state-icon">
-            <div className="empty-state-placeholder"></div>
-          </div>
-          <h3 className="empty-state-title">No hay productos disponibles</h3>
-          <p className="empty-state-description">Los productos aparecerán aquí cuando estén disponibles.</p>
-        </div>
-      )}
     </div>
   )
 }

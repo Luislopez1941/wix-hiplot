@@ -72,7 +72,8 @@ export const storeWebPages = create<StoreState>((set) => ({
 
     HeaderAndFooter: async (id_sucursal: number) => {
         try {
-        const response = await APIs.HeaderAndFooter(id_sucursal)
+       const response = await APIs.getHeaderAndFooter(id_sucursal);
+
 
         return response;
         } catch (error) {

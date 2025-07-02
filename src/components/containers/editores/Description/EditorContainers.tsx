@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
-import { editorContainerStore } from "../../../../../../zustand/web-page/EditorContainer";
+import { editorContainerStore } from "../../../../zustand/web-page/EditorContainer";
 import FontWeight from './fontWeight.json';
-import { useWebStore } from "../../../../../../zustand/web-page/StoreWebPage";
+import { useWebStore } from "../../../../zustand/web-page/StoreWebPage";
 
-const EditorContainers = ({ typeName, dataEditContainer, indexEditSection, selectedTypeSection, index }: any) => {
+const EditorContainers = ({ typeName, dataEditContainer, indexEditSection, selectedTypeSection }: any) => {
 
   const { containers }: any = useWebStore();
   const setContainers = useWebStore(state => state.setContainers)
@@ -14,7 +14,7 @@ const EditorContainers = ({ typeName, dataEditContainer, indexEditSection, selec
 
   const [selectTypesFontWeight, setSelectTypesFontWeight] = useState(false);
   const [selectedTypeFontWeight, setSelectedTypeFontWeight] = useState(instanceData.fontWeight || 400);
-  const [selectedColor, setSelectedColor] = useState(instanceData.color || "#000000");
+  const [selectedColor] = useState(instanceData.color || "#000000");
   const [fontSize, setFontSize] = useState(instanceData.fontSize || 14);
   const [textAlign, setTextAlign] = useState(instanceData.textAlign || "left");
   const [content, setContent] = useState(instanceData.content || "");

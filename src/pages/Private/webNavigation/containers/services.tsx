@@ -1,11 +1,9 @@
 import './styles/Services.css'
 import '../styles/editor.css'
-import { useWebStore } from '../../../../zustand/web-page/StoreWebPage';
 
-const services = ({ editServices, item, index }: any) => {
-  const { containers }: any = useWebStore();
-  const setItems = useWebStore(state => state.setItems)
-  const setContainers = useWebStore(state => state.setContainers)
+
+const services = ({ editServices, item }: any) => {
+
 
   const deleteItems = () => {
 
@@ -13,11 +11,10 @@ const services = ({ editServices, item, index }: any) => {
 
 
   return (
-    <div className="services__web-page">
-
+    <div className="services__web-page" style={{backgroundColor: item?.style?.background_color}}>
       <div className="row__one_web">
         {item?.contenido?.map((item: any, i: number) => (
-          <div className='item__service'>
+          <div className='item__service' style={{backgroundColor: item?.styles?.background_card}}>
             <div className='container__services_img_web-page' onClick={() => editServices({ type: 1, index: i })}>
               <div style={{
                 borderRadius: item?.styles?.border,
@@ -32,12 +29,12 @@ const services = ({ editServices, item, index }: any) => {
               </div>
             </div>
             <div>
-              <div className='item' style={{textAlign: item?.styles?.title?.textAling, fontSize: item?.styles?.title?.FontSize, fontWeight: item?.styles?.title?.FontWeight}}>
+              <div className='item' style={{textAlign: item?.styles?.text_aling_title, fontSize: item?.styles?.font_size_title, fontWeight: item?.styles?.font_weight_title, color: item?.styles?.color_title}}>
                 {item.title}
               </div>
             </div>
             <div>
-              <div className='item' style={{textAlign: item?.styles?.description?.textAling, fontSize: item?.styles?.description?.FontSize, fontWeight: item?.styles?.description?.FontWeight}}>
+              <div className='item' style={{textAlign: item?.styles?.text_aling_description, fontSize: item?.styles?.font_size_description, fontWeight: item?.styles?.font_weight_description, color: item?.styles?.color_description}}>
                 {item.description}
               </div>
             </div>

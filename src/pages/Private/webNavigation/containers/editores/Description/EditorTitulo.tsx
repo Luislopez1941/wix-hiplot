@@ -11,12 +11,12 @@ import './styles/EditorTitulo.css'
 
 interface EditorTituloProps {
   typeName: string
-  update: any
-  indexEditSection: number
-  selectedTypeSection: any
+  update?: any
+  indexEditSection?: number
+  selectedTypeSection?: any
 }
 
-const EditorTitulo = ({ typeName, update, indexEditSection, selectedTypeSection }: EditorTituloProps) => {
+const EditorTitulo = ({ typeName, indexEditSection, selectedTypeSection }: EditorTituloProps) => {
   const { sections }: any = useWebStore()
   const setSections = useWebStore((state) => state.setSections)
 

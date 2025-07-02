@@ -3,19 +3,15 @@ import { storeWebPages } from "../../../zustand/WebPages";
 import useUserStore from "../../../zustand/General";
 import { useEffect, useState, useRef } from "react";
 import './styles/WebNavigation.css'
-import Services from "./containers/services";
-import Carousel from "./containers/Carousel";
+
+import ModernCarousel from "./containers/Carousel";
 import Description from "./containers/Description";
 import Banner from "./containers/Banner";
-import SmallBanner from './containers/SmallBanner'
+import SmallBanner from './containers/InfoBanner'
 import Form from "./containers/Form";
 import { Reorder } from "framer-motion";
-import Slider from "./containers/Slider";
-import dataJson from './jsons/banner.json'
 import serviceJson from "./jsons/services.json";
 import './styles/editor.css'
-import imagesJson from './jsons/imagesJson.json'
-import FontWeight from './jsons/fontWeight.json'
 import { useEditorStore } from "../../../zustand/web-page/Editor";
 import { useWebStore } from "../../../zustand/web-page/StoreWebPage";
 
@@ -24,32 +20,42 @@ import serv from '../../../assets/web-navigation/img/servicios.png'
 import desc from '../../../assets/web-navigation/img/descripcion.png'
 import sli from '../../../assets/web-navigation/img/slider.png'
 import car from '../../../assets/web-navigation/img/carrusel.png'
-import sb from '../../../assets/web-navigation/img/smallbanner.png'
+import sb from '../../../assets/web-navigation/containers/image.png'
 import APIs from "../../../services/services/APIs";
 import EditorTitulo from "./containers/editores/Description/EditorTitulo";
 import { editorContainerStore } from "../../../zustand/web-page/EditorContainer";
 import EditorContainers from "./containers/editores/Description/EditorTitleContainers";
 import EditorCDescription from "./containers/editores/Description/EditorDescriptionContainers";
 import EditorImage from "./containers/editores/Description/EditorImage";
-import ClientsSlider from "./containers/Clients-slider";
-import AutomaticSlider from "./containers/Slider";
-import { useDropzone } from 'react-dropzone';
-import { useCallback } from 'react';
 import EditorTitleContainers from "./containers/editores/Description/EditorTitleContainers";
 import EditorDescriptionContainers from "./containers/editores/Description/EditorDescriptionContainers";
+import Slider from "./containers/Slider";
+import Testimonials from "../../../components/containers/Testimonials";
+import EditorBanner from "./containers/editores/EditorBanner";
+import EditorSlider from "./containers/editores/EditorSlider";
+import Cards from "../../../components/containers/Cards";
+import Promotions from "./containers/Promotions";
+import AboutUs from "./containers/AboutUs";
+import { BranchSection } from "./containers/BranchSection";
+import ProductCatalog from "./containers/ProductCatalog";
+import { useEditorBannerStore } from "../../../zustand/web-page/EditorBanner";
+import SmallBannerEditor from "./containers/editores/EditorSmallBanner";
 
 const WebNavigation = () => {
   const userState = useUserStore(state => state.user);
-  const user_id = userState.id
+
   const { HeaderAndFooter, headerAndFooter, updateWeb, updateSectionWeb,
     createContenedor, getContenedor, updateContenedor, deleteContenedor, createSectionsWeb, getSectionsWeb, deleteSectionsWeb,
     createProductsWeb, updateProductsWeb, deleteProductsWeb, updateContenedorOrder }: any = storeWebPages();
 
+  const { dataEditContainer }: any = useEditorBannerStore();
+  const setDataEditContainer = useEditorBannerStore(state => state.setDataEditContainer);
+  const setCurrentSlide = useEditorBannerStore(state => state.setCurrentSlide);
+
   const { data }: any = useEditorStore();
   const { dataContainer }: any = editorContainerStore();
 
-  const { sections, containers, items }: any = useWebStore();
-  const setItems = useWebStore(state => state.setItems)
+  const { sections, containers }: any = useWebStore();
   const setSections = useWebStore(state => state.setSections)
   const setContainers = useWebStore(state => state.setContainers)
 
@@ -71,17 +77,20 @@ const WebNavigation = () => {
 
   const [banners, setBanners] = useState<any>([]);
 
-  const [idContainerH, setIdContainerH] = useState<any>(null)
+  const [idContainerH] = useState<any>(null)
 
   const setHeaderAndFooter = storeWebPages(state => state.setHeaderAndFooter)
 
   const idConatinerHeader = async (x: any) => {
-    setIdContainerH(x.id)
+    setSectinId(x.id)
+    const container = await getContenedor(x.id);
+    const parsedContainer = container?.map((x: any) => ({
+      ...x,
+      contenido: safeJSONParse(x.contenido),
+      style: safeJSONParse(x.style),
+    }));
+    setContainers(parsedContainer)
 
-    // const container = await getContenedor(x.id)
-    // if (container) {
-    //   setBanners(container);
-    // }
   }
 
   const [logoImage, setlogoImage] = useState<any>(null)
@@ -96,7 +105,7 @@ const WebNavigation = () => {
     setlogoImage(response?.logo)
 
     setHeaderAndFooter(response)
-    setFamilies([])
+
   }
 
 
@@ -111,6 +120,16 @@ const WebNavigation = () => {
       setlogoImage(re?.logo)
       return re
     }
+
+    const safeJSONParsed = (str: any, fallback: any = {}) => {
+      try {
+        if (!str || typeof str !== "string") return str || fallback;
+        return JSON.parse(str);
+      } catch (error) {
+        console.warn("JSON inválido:", str);
+        return fallback;
+      }
+    };
 
     const fetchData = async () => {
 
@@ -129,17 +148,17 @@ const WebNavigation = () => {
       const container = await getContenedor(sections[0].id);
       const parsedContainer = container?.map((x: any) => ({
         ...x,
-        contenido: safeJSONParse(x.contenido),
-        style: safeJSONParse(x.style),
-
+        contenido: safeJSONParsed(x.contenido),
+        style: safeJSONParsed(x.style),
       }));
+
       setContainers(parsedContainer)
+
     };
     fetchData()
     hyf()
 
   }, [id_sucursal, idContainerH]);
-
 
 
 
@@ -164,12 +183,21 @@ const WebNavigation = () => {
   }
 
   const handleTypesFamiliesChange = (family: any) => {
-    setSelectedTypeFamily(family)
+    setSelectedTypeFamily(family.id)
+    const data = containers?.map((x: any, index: number) => {
+      if (index === dataEditContainer?.index) {
+        return {
+          ...x,
+          id_familia: family.id
+        };
+      }
+      return x;
+    });
+
+    setContainers(data)
     setSelectTypesFamilies(false)
   }
 
-
-  const [selectTypesFontWeight, setSelectTypesFontWeight] = useState<any>()
 
 
 
@@ -198,10 +226,10 @@ const WebNavigation = () => {
 
   const [indexEditSection, setIndexEditSection] = useState<any>()
 
-  const handleTypesSectionsChange = (x: any, index: number) => {
+  const handleTypesSectionsChange = (x: any, index?: number) => {
     setSelectedTypeSection(x);
     setSelectTypesSections(false);
-    setNameSection(x.seccion)
+
     setIndexEditSection(index)
 
     useEditorStore.getState().setData('input_section_edit', { seccion: x.seccion });
@@ -510,7 +538,7 @@ const WebNavigation = () => {
 
 
 
-  const [nameSection, setNameSection] = useState<string>('')
+
 
 
   const createSections = async (e: React.FormEvent) => {
@@ -579,13 +607,13 @@ const WebNavigation = () => {
 
   //////////////////////// SERVICIOS /////////////////////////
 
-  const [dataNumberService, setDataNumberService] = useState<any>()
+  const [dataNumberService] = useState<any>()
 
-  const editServicePadre = (x: any) => {
-    console.log('x', x)
-    setDataNumberService(x);
+  // const editServicePadre = (x: any) => {
+  //   console.log('x', x)
+  //   setDataNumberService(x);
 
-  };
+  // };
   console.log('dataNumberService', dataNumberService)
   useEffect(() => {
 
@@ -597,7 +625,7 @@ const WebNavigation = () => {
 
 
 
-  const deleteContainer = async (item: any, i: number) => {
+  const deleteContainer = async (item: any, i?: number) => {
     let filter = containers.filter((_: any, index: number) => index !== i);
     setContainers(filter);
     await deleteContenedor(item.id)
@@ -685,6 +713,8 @@ const WebNavigation = () => {
   ///////////////CREAR CONTENEDORES////////////////
   /////////////////////////////////////////////////
 
+  const [indexContainer, setIndexContainer] = useState<number>(0)
+
   const saveContainer = async (x: any) => {
 
     const id_seccion = sectionId;
@@ -702,8 +732,61 @@ const WebNavigation = () => {
         id_seccion,
         id_familia,
         tipo_contenedor,
-        imagen: dataJson.imagen,
-        titulo: dataJson.titulo,
+        imagen: '',
+        titulo: '',
+        contenido: JSON.stringify({
+          index: 0,
+          data: [
+            {
+              title: "Discover Amazing\nExperiences",
+              subtitle: "Welcome to Innovation",
+              description:
+                "Transform your digital presence with cutting-edge solutions designed for the modern world.",
+              backgroundImage:
+                "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+              backgroundColor: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+              textColor: "#ffffff",
+              buttonText: "Get Started",
+              buttonLink: "#"
+            },
+            {
+              title: "Discover Amazing\nExperiences",
+              subtitle: "Welcome to Innovation",
+              description:
+                "Transform your digital presence with cutting-edge solutions designed for the modern world.",
+              backgroundImage:
+                "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+              backgroundColor: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+              textColor: "#ffffff",
+              buttonText: "Get Started",
+              buttonLink: "#"
+            },
+            {
+              title: "Discover Amazing\nExperiences",
+              subtitle: "Welcome to Innovation",
+              description:
+                "Transform your digital presence with cutting-edge solutions designed for the modern world.",
+              backgroundImage:
+                "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+              backgroundColor: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+              textColor: "#ffffff",
+              buttonText: "Get Started",
+              buttonLink: "#"
+            },
+            {
+              title: "Discover Amazing\nExperiences",
+              subtitle: "Welcome to Innovation",
+              description:
+                "Transform your digital presence with cutting-edge solutions designed for the modern world.",
+              backgroundImage:
+                "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+              backgroundColor: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+              textColor: "#ffffff",
+              buttonText: "Get Started",
+              buttonLink: "#"
+            }
+          ]
+        })
       }
 
       // Define la función setData fuera del objeto newData
@@ -749,13 +832,11 @@ const WebNavigation = () => {
 
     ////CONTENEDRO DE 3 ///////
     if (x == 3) {
-      const data = {
+      const data: any = {
         id_seccion,
         id_familia,
         tipo_contenedor,
-        imagen: dataJson.imagen,
-        titulo: serviceJson.titulo,
-        imagen4: serviceJson.descripcion
+
       }
 
       // Define la función setData fuera del objeto newData
@@ -770,18 +851,65 @@ const WebNavigation = () => {
         id_seccion,
         id_familia,
         tipo_contenedor,
-        imagen: imagesJson.image,
-        titulo: serviceJson.titulo,
-        imagen2: imagesJson.image,
-        titulo2: imagesJson.image,
-        imagen3: imagesJson.image,
-        titulo3: imagesJson.image,
-        imagen4: serviceJson.descripcion,
-        titulo4: imagesJson.image,
-        imagen5: imagesJson.image,
-        titulo5: imagesJson.image,
-        titulo6: imagesJson.image,
-        imagen6: imagesJson.image,
+        contenido: JSON.stringify({
+          index: 0,
+          title: "Empresas que confían en nosotros",
+          subtitle: "Más de 500 empresas han elegido nuestros servicios profesionales",
+          company: '',
+          experiency: '',
+          tailor: '',
+          data: [
+            {
+              id: "1",
+              name: "TechCorp",
+              image:
+                "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=100&fit=crop",
+            },
+            {
+              id: "2",
+              name: "GlobalSoft",
+              image:
+                "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=200&h=100&fit=crop",
+            },
+            {
+              id: "3",
+              name: "Innovate Inc",
+              image:
+                "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200&h=100&fit=crop",
+            },
+            {
+              id: "4",
+              name: "Digital Plus",
+              image:
+                "https://images.unsplash.com/photo-1572021335469-31706a17aaef?w=200&h=100&fit=crop",
+            },
+            {
+              id: "5",
+              name: "FutureTech",
+              image:
+                "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=200&h=100&fit=crop",
+            },
+            {
+              id: "6",
+              name: "Smart Solutions",
+              image:
+                "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=100&fit=crop",
+            },
+            {
+              id: "7",
+              name: "Pro Systems",
+              image:
+                "https://images.unsplash.com/photo-1553028826-f4804151e626?w=200&h=100&fit=crop",
+            },
+            {
+              id: "8",
+              name: "Elite Group",
+              image:
+                "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=200&h=100&fit=crop",
+            },
+          ]
+        })
+
       }
 
       // Define la función setData fuera del objeto newData
@@ -796,9 +924,28 @@ const WebNavigation = () => {
         id_seccion,
         id_familia,
         tipo_contenedor,
-        imagen: dataJson.imagen,
-        titulo: serviceJson.titulo,
-        imagen4: serviceJson.descripcion
+        imagen: '',
+        titulo: '',
+        contenido: JSON.stringify({
+          title: "Nuevos productos disponibles",
+          subtitle: "Gafetes profesionales y tarjetas personalizadas con acabados premium",
+        })
+      }
+
+      // Define la función setData fuera del objeto newData
+      setBanners([...banners, data])
+      const setData = async () => await createContenedor(data);
+      await setData();
+    }
+
+    /////CONTENEDRO DE FORM ///////
+    if (x == 7) {
+      const data = {
+        id_seccion,
+        // id_familia: selectedTypeFamily.id,
+        tipo_contenedor,
+        imagen: '',
+
       }
 
       // Define la función setData fuera del objeto newData
@@ -814,9 +961,9 @@ const WebNavigation = () => {
         id_seccion,
         id_familia,
         tipo_contenedor,
-        imagen: dataJson.imagen,
-        titulo: serviceJson.titulo,
-        imagen4: serviceJson.descripcion
+        imagen: '',
+        titulo: '',
+        imagen4: ''
       }
 
       // Define la función setData fuera del objeto newData
@@ -833,10 +980,71 @@ const WebNavigation = () => {
         // id_familia: selectedTypeFamily.id,
         tipo_contenedor,
         imagen: '',
-        titulo: serviceJson.titulo,
-        imagen4: serviceJson.descripcion
+        // titulo: serviceJson.titulo,
+        // imagen4: serviceJson.descripcion
       }
 
+      // Define la función setData fuera del objeto newData
+      setBanners([...banners, data])
+      const setData = async () => await createContenedor(data);
+      await setData();
+    }
+
+
+    /////CONTENEDRO DE SLIDER ///////
+    if (x == 9) {
+      const data = {
+        id_seccion,
+        // id_familia: selectedTypeFamily.id,
+        tipo_contenedor,
+        imagen: '',
+
+      }
+
+      // Define la función setData fuera del objeto newData
+      setBanners([...banners, data])
+      const setData = async () => await createContenedor(data);
+      await setData();
+    }
+
+    /////CONTENEDRO DE SLIDER ///////
+    if (x == 10) {
+      const data = {
+        id_seccion,
+        // id_familia: selectedTypeFamily.id,
+        tipo_contenedor,
+        imagen: '',
+
+      }
+      // Define la función setData fuera del objeto newData
+      setBanners([...banners, data])
+      const setData = async () => await createContenedor(data);
+      await setData();
+    }
+
+    /////CONTENEDRO DE SLIDER ///////
+    if (x == 11) {
+      const data = {
+        id_seccion,
+        // id_familia: selectedTypeFamily.id,
+        tipo_contenedor,
+        imagen: '',
+
+      }
+      // Define la función setData fuera del objeto newData
+      setBanners([...banners, data])
+      const setData = async () => await createContenedor(data);
+      await setData();
+    }
+    /////CONTENEDRO DE SLIDER ///////
+    if (x == 12) {
+      const data = {
+        id_seccion,
+        // id_familia: selectedTypeFamily.id,
+        tipo_contenedor,
+        imagen: '',
+
+      }
       // Define la función setData fuera del objeto newData
       setBanners([...banners, data])
       const setData = async () => await createContenedor(data);
@@ -848,13 +1056,34 @@ const WebNavigation = () => {
   ///////////////EDITOR DE LOS CONTENEDORES///////////
   ////////////////////////////////////////////////////
 
-  const [dataEditContainer, setDataEditContainer] = useState<any>({})
+  console.log(userState)
+
+  console.log('dataEditContainer', dataEditContainer)
 
   const containerEditor = async (item: any, index: any) => {
-    setDataEditContainer({ item: item, index: index });
+    setCurrentSlide(0)
+    setDataEditContainer({ item: item, index: 0 });
+    setIndexContainer(index)
+    // const data = containers?.map((x: any, i: number) => {
+    //   if (i === index) {
+    //     return {
+    //       ...x,
+    //       contenido: {
+    //         ...x.contenido,
+    //         index: 0,
+    //       },
+    //     };
+    //   }
+    //   return x;
+    // });
+    // setContainers(data);
+    if (item.tipo_contenedor == 5) {
+      let response = await APIs.getFamilies(3)
+      setFamilies(response)
+    }
   };
 
-
+  console.log('item', containers)
 
 
   /////////////////////////////////////////////////////
@@ -866,23 +1095,27 @@ const WebNavigation = () => {
   const SaveUpdateContainer = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const index = dataEditContainer.index;
+
+    const index = indexContainer;
     const containerToUpdate = {
       ...containers[index],
       contenido: JSON.stringify(containers[index]?.contenido),
       style: JSON.stringify(containers[index]?.style),
     };
 
+    console.log('containerToUpdate', containerToUpdate)
+
     try {
       await updateContenedor(containerToUpdate);
 
-      const container = await getContenedor(idContainerH);
+      const container = await getContenedor(sectionId);
       const parsedContainer = container?.map((x: any) => ({
         ...x,
         contenido: safeJSONParse(x.contenido),
         style: safeJSONParse(x.style),
+
       }));
-      setContainers(parsedContainer);
+      setContainers(parsedContainer)
     } catch (error) {
       console.error("Error al actualizar el contenedor:", error);
     }
@@ -890,8 +1123,29 @@ const WebNavigation = () => {
 
 
 
-  const updateContainerOrder = async (item: any, index: any) => {
+  const updateContainerOrder = async (item: any, index: number) => {
+    // Mapear todos los contenedores para aplicar las transformaciones necesarias
+    const updatedContainers = containers.map((container: any, i: any) => ({
+      ...container,
+      contenido: JSON.stringify(container.contenido),
+      style: JSON.stringify(container.style),
+      orden: i
+    }));
 
+    // Encontrar el índice del item a actualizar
+    const itemIndex = updatedContainers.findIndex((el: any) => el.id === item.id);
+
+    // Si existe, actualizar su orden manualmente también
+    if (itemIndex !== -1) {
+      updatedContainers[itemIndex] = {
+        ...updatedContainers[itemIndex],
+        tipo_contenedor: item.tipo_contenedor,
+        order: index
+      };
+    }
+
+    // Enviar array actualizado al backend o lógica correspondiente
+    await updateContenedorOrder(updatedContainers);
   };
 
 
@@ -949,7 +1203,7 @@ const WebNavigation = () => {
 
 
 
-  const handleImageContainerChange = (i: number) => {
+  const handleImageContainerChange = (i: any) => {
     const data = containers?.map((x: any, index: number) => {
       if (index === i) {
         return {
@@ -970,54 +1224,215 @@ const WebNavigation = () => {
   }
 
 
-  const handleFileToBase64 = (file: any) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64 = reader.result;
-      const data = containers?.map((x: any, index: number) => {
-        if (index === dataEditContainer.index) {
-          return {
-            ...x,
-            imagen: base64
-          };
-        }
-        return x;
-      });
 
-      setContainers(data);
-    };
-    reader.readAsDataURL(file);
+  const [enabled, setEnabled] = useState(false);
+
+  const toggleSwitch = () => {
+    setEnabled(!enabled);
+    const data = containers?.map((x: any, index: number) => {
+      if (index === dataEditContainer?.index) {
+        return {
+          ...x,
+          style: {
+            ...x.style,
+            order: {
+              ...x.style.order,
+              order: enabled ? 0 : 1,
+            },
+          },
+        }
+      }
+      return x
+    })
+    setContainers(data)
+  };
+
+  const [showPalette, setShowPalette] = useState(false);
+  const [selectedColor, setSelectedColor] = useState('');
+
+  const handleCheck = () => {
+    setShowPalette(!showPalette);
+  };
+
+  const handleColorSelect = (color: any) => {
+    setSelectedColor(color);
+    const data = containers?.map((x: any, index: number) => {
+      if (index === dataEditContainer?.index) {
+        return {
+          ...x,
+          style: {
+            ...x.style,
+            color: color,
+          },
+        };
+      }
+      return x
+    })
+    setContainers(data)
+
+  };
+
+  const handleCustomColor = (e: any) => {
+    const color = e.target.value;
+    setSelectedColor(color);
+    const data = containers?.map((x: any, index: number) => {
+      if (index === dataEditContainer?.index) {
+        return {
+          ...x,
+          style: {
+            ...x.style,
+            color: color,
+          },
+        };
+      }
+      return x
+    })
+    setContainers(data)
+  };
+
+  const predefinedColors = [
+    '#f44336', '#e91e63', '#9c27b0',
+    '#3f51b5', '#03a9f4', '#4caf50',
+    '#ffeb3b', '#ff9800', '#795548', '#607d8b'
+  ];
+
+  const containerEditorH = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newHeight = Number(e.target.value);
+    // setStyles((prev: any) => ({
+    //   ...prev,
+    //   heightContainer: newHeight,
+    // }));
+
+    // Actualizar el contenedor editado
+    const data = containers?.map((x: any, index: number) => {
+      if (index === dataEditContainer?.index) {
+        return {
+          ...x,
+          style: {
+            ...x.style,
+            heightContainer: newHeight
+          }
+        };
+      }
+      return x;
+    });
+
+    // Guardar los contenedores actualizados
+    setContainers(data);
   };
 
 
-  const onDrop = useCallback((acceptedFiles: any) => {
-    const file = acceptedFiles[0];
-    if (file) {
-      handleFileToBase64(file);
-    }
-  }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: { 'image/*': [] },
-    multiple: false,
-  });
+  //////////////////////////////////SERVICES//////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////
 
-  console.log('dataEditContainer', dataEditContainer)
+  const colorServicesBackground = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const color = e.target.value;
+    // Actualizar el contenedor editado
+    const data = containers?.map((x: any, index: number) => {
+      if (index === dataEditContainer?.index) {
+        return {
+          ...x,
+          style: {
+            ...x.style,
+            background_color: color
+          }
+        };
+      }
+      return x;
+    });
+
+    // Guardar los contenedores actualizados
+    setContainers(data);
+  };
+
+  const containerServicesCard = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const border = Number(e.target.value);
+    // Actualizar el contenedor editado
+    const data = containers?.map((x: any, index: number) => {
+      if (index === dataEditContainer?.index) {
+        const updatedSubItems = x.contenido.map((item: any, indexTwo: number) => {
+          if (dataNumberService.index === indexTwo) {
+            return {
+              ...item,
+              styles: {
+                ...item?.styles,
+                border: border
+              }
+            };
+
+          }
+          return item;
+        });
+        return {
+          ...x,
+          contenido: updatedSubItems
+        };
+      }
+      return x;
+    });
+    // Guardar los contenedores actualizados
+    setContainers(data);
+  };
+
+  console.log(containers)
+  const handleCustomColorService = (e: any) => {
+    const color = e.target.value;
+    setSelectedColor(color);
+    const data = containers?.map((x: any, index: number) => {
+      if (index === dataEditContainer?.index) {
+        const updatedSubItems = x.contenido.map((item: any, indexTwo: number) => {
+          if (dataNumberService.index === indexTwo) {
+            return {
+              ...item,
+              styles: {
+                ...item?.styles,
+                background_card: color
+              }
+            };
+          }
+          return item;
+        });
+        return {
+          ...x,
+          contenido: updatedSubItems
+        };
+      }
+      return x;
+    });
+    setContainers(data);
+  };
+
+  const handleColorSelectService = (color: any) => {
+    setSelectedColor(color);
+    const data = containers?.map((x: any, index: number) => {
+      if (index === dataEditContainer?.index) {
+        const updatedSubItems = x.contenido.map((item: any, indexTwo: number) => {
+          if (dataNumberService.index === indexTwo) {
+            return {
+              ...item,
+              styles: {
+                ...item?.styles,
+                background_card: color
+              }
+            };
+          }
+          return item;
+        });
+        return {
+          ...x,
+          contenido: updatedSubItems
+        };
+      }
+      return x;
+    });
+    setContainers(data);
+  };
 
   return (
     <div className="web_page">
-      <header className='hero__web' >
+      <header className='hero__web'>
         <form className='hero__web_container'>
-          <div className='left__hero'>
-            <div className='back_web-page'>
-              <svg xmlns="http://www.w3.org/2000/svg" width='20' fill='#9b9b9b' viewBox="0 0 448 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" /></svg>
-            </div>
-            <div className='active__container'>
-              <svg xmlns="http://www.w3.org/2000/svg" width='16' fill='#29845a' viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z" /></svg>
-              <p>Activa</p>
-            </div>
-          </div>
           <nav className='nav__hero_web'>
             <ul className='nav__links_web'>
               <div onClick={responseWeb}>
@@ -1300,7 +1715,7 @@ const WebNavigation = () => {
                   </div>
                   <div>
                     <p>Small Banner</p>
-                    <div className="container__change_banner_create" onClick={() => saveContainer(6)} style={{ backgroundImage: `url(${sb})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                    <div className="container__change_banner_create" onClick={() => saveContainer(6)} style={{ backgroundImage: `url(${sb})`, backgroundSize: 'container', backgroundPosition: 'center' }}>
                       <div >
                         <b><p className="file__input_text">Agregar</p></b>
                       </div>
@@ -1323,10 +1738,54 @@ const WebNavigation = () => {
                     </div>
                   </div>
                   <div>
-                    <p>Slider 2</p>
+                    <p>Testimonios</p>
                     <div className="container__change_banner_create" onClick={() => saveContainer(8)}>
                       <div>
                         <p className="file__input_text">Agregar</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <p>Catalago</p>
+                    <div className="container__change_banner_create" onClick={() => saveContainer(9)}>
+                      <div>
+                        <p className="file__input_text">Agregar Catalago</p>
+                      </div>
+                      {/* <label for="file-upload1" class="custom-file-upload">
+                      <small> Seleccionar archivo</small>
+                      <input id="file-upload1" type="file" onChange={handleImageChange}/>
+                    </label> */}
+                    </div>
+                  </div>
+                  <div>
+                    <p>Promociones</p>
+                    <div className="container__change_banner_create" onClick={() => saveContainer(10)}>
+                      <div>
+                        <p className="file__input_text">Agregar Promociones</p>
+                      </div>
+                      {/* <label for="file-upload1" class="custom-file-upload">
+                      <small> Seleccionar archivo</small>
+                      <input id="file-upload1" type="file" onChange={handleImageChange}/>
+                    </label> */}
+                    </div>
+                  </div>
+                  <div>
+                    <p>Sobre nosotros</p>
+                    <div className="container__change_banner_create" onClick={() => saveContainer(11)}>
+                      <div>
+                        <p className="file__input_text">Agregar Promociones</p>
+                      </div>
+                      {/* <label for="file-upload1" class="custom-file-upload">
+                      <small> Seleccionar archivo</small>
+                      <input id="file-upload1" type="file" onChange={handleImageChange}/>
+                    </label> */}
+                    </div>
+                  </div>
+                  <div>
+                    <p>Card Sucursales</p>
+                    <div className="container__change_banner_create" onClick={() => saveContainer(12)}>
+                      <div>
+                        <p className="file__input_text">Agregar Card Sucursales</p>
                       </div>
                       {/* <label for="file-upload1" class="custom-file-upload">
                       <small> Seleccionar archivo</small>
@@ -1351,34 +1810,67 @@ const WebNavigation = () => {
                     {dataEditContainer?.item?.tipo_contenedor === 1 ?
                       <div>
                         <div className="item_web-page">
-                          <p className="title__editor">Titulo del banner</p>
-                          <EditorContainers typeName={'input_container_edit'} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} />
+                          <EditorBanner indexContainer={indexContainer} />
                         </div>
-                        <div className="item_web-page">
-                          <p>Imagen del item</p>
-                          <div className="container__change_banner_update"
-                            style={{
-                              backgroundImage: `url(${dataEditContainer?.imagen})`,
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center',
-                            }}
-                            {...getRootProps()}
-                          >
-                            <input {...getInputProps()} />
-                            <label className="custom-file-upload">
-                              <small>
-                                {isDragActive ? 'Suelta la imagen aquí...' : 'Seleccionar o arrastra una imagen'}
-                              </small>
-                            </label>
-                          </div>
-                        </div>
-
                       </div>
                       :
                       ''
                     }
                     {dataEditContainer?.item?.tipo_contenedor === 2 ?
                       <div>
+                        <div className="row__two">
+                          <div className="slider-container-height">
+                            <div>
+                              <p>Tamaño del contendor</p>
+                              <input
+                                type="range"
+                                min="200"
+                                max="1000"
+                                onChange={containerServicesCard}
+                                className="slider__editor_wep-page"
+                              />
+                            </div>
+
+                          </div>
+                        </div>
+                        <div>
+                          <p>Colo de background</p>
+                          <div className="custom-color">
+
+                            <input type="color" onChange={colorServicesBackground} value={selectedColor} />
+                          </div>
+                        </div>
+                        <div>
+                          <p>Color de fondo</p>
+                          <div className="color-check-container">
+                            <label className="custom-checkbox">
+                              <input type="checkbox" onChange={handleCheck} />
+                              <span className="checkmark"></span>
+                              <span className="label-text">Activar paleta de colores</span>
+                            </label>
+
+                            {showPalette && (
+                              <div className="palette">
+                                {predefinedColors.map((color) => (
+                                  <div
+                                    key={color}
+                                    className="color-swatch"
+                                    style={{
+                                      backgroundColor: color,
+                                      border: selectedColor === color ? '3px solid #000' : 'none',
+                                    }}
+                                    onClick={() => handleColorSelectService(color)}
+                                  />
+                                ))}
+                                <div className="custom-color">
+                                  <label>Personalizado: </label>
+                                  <input type="color" onChange={handleCustomColorService} value={selectedColor} />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
                         {dataNumberService?.type == 1 ?
                           <div>
                             <EditorImage typeName={'input_services_image'} subItems={true} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
@@ -1427,44 +1919,92 @@ const WebNavigation = () => {
                     }
                     {dataEditContainer?.item?.tipo_contenedor === 3 ?
                       <div>
+                        <div>
+                          <p>Invertir pocisiones</p>
+                          <label className="ios-switch">
+                            <input type="checkbox" checked={enabled} onChange={toggleSwitch} />
+                            <span className="slider" />
+                          </label>
+                        </div>
+                        <div className="row__two">
+                          <div className="slider-container-height">
+                            <div>
+                              <p>Tamaño del contendor</p>
+                              <input
+                                type="range"
+                                min="200"
+                                max="1000"
+
+                                onChange={containerEditorH}
+                                className="slider__editor_wep-page"
+                              />
+                            </div>
+
+                          </div>
+                        </div>
+                        <div>
+                          <p>Color de fondo</p>
+                          <div className="color-check-container">
+                            <label className="custom-checkbox">
+                              <input type="checkbox" onChange={handleCheck} />
+                              <span className="checkmark"></span>
+                              <span className="label-text">Activar paleta de colores</span>
+                            </label>
+
+                            {showPalette && (
+                              <div className="palette">
+                                {predefinedColors.map((color) => (
+                                  <div
+                                    key={color}
+                                    className="color-swatch"
+                                    style={{
+                                      backgroundColor: color,
+                                      border: selectedColor === color ? '3px solid #000' : 'none',
+                                    }}
+                                    onClick={() => handleColorSelect(color)}
+                                  />
+                                ))}
+                                <div className="custom-color">
+                                  <label>Personalizado: </label>
+                                  <input type="color" onChange={handleCustomColor} value={selectedColor} />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                         <EditorImage typeName={'input_services_image'} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
+
                         <div className="item_web-page">
                           <p>Titulo</p>
-                          <EditorTitleContainers typeName={'input_services_'} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService}/>
+                          <EditorTitleContainers typeName={'input_description_title'} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
                         </div>
                         <div className="item_web-page">
                           <p>Descripción</p>
-                          <EditorDescriptionContainers />
+                          <EditorDescriptionContainers typeName={'input_description_description'} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
                         </div>
                       </div>
                       :
                       ''
                     }
-                    {containers.tipo_contenedor === 4 ?
+                    {dataEditContainer?.item?.tipo_contenedor === 4 ?
                       <div>
-                        <div>
-                          <p>EN DESARROLLO...(Solo agrega una imagen)</p>
-                          <div className="item_web-page">
-                          </div>
-                        </div>
-                        <div>
-                          <p>Imagen del item</p>
-                          <div className="container__change_banner_update item_web-page" style={{ backgroundImage: `url(${banners[index]?.imagen})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                            <label className="custom-file-upload">
-                              <small> Seleccionar archivo</small>
-                              {/* <input id="file-upload1" type="file" onChange={handleImageContainerChange} /> */}
-                            </label>
-                          </div>
-                        </div>
+                        <EditorSlider indexContainer={indexContainer} />
                       </div>
                       :
                       ''
                     }
-                    {containers.tipo_contenedor === 5 ?
+                    {dataEditContainer?.item?.tipo_contenedor === 5 ?
                       <div>
+                        <div>
+                          <p>Colo de background</p>
+                          <div className="custom-color">
+
+                            <input type="color" onChange={colorServicesBackground} value={selectedColor} />
+                          </div>
+                        </div>
                         <div className="item_web">
                           <div className='select__container'>
-                            <label className='label__general'>Tipo de familia (EN DESARROLLO...)</label>
+                            <label className='label__general'>Tipo de familia</label>
                             <div className='select-btn__general'>
                               <div className={`select-btn ${selectTypesFamilies ? 'active' : ''}`} onClick={openSelectFamilies}>
                                 <div className='select__container_title'>
@@ -1474,7 +2014,7 @@ const WebNavigation = () => {
                               </div>
                               <div className={`content ${selectTypesFamilies ? 'active' : ''}`} >
                                 <ul className={`options ${selectTypesFamilies ? 'active' : ''}`} style={{ opacity: selectTypesFamilies ? '1' : '0' }}>
-                                  {families && families.map((family: any) => (
+                                  {families?.map((family: any) => (
                                     <li key={family.id} onClick={() => handleTypesFamiliesChange(family)}>
                                       <div>{family.nombre}</div>
                                     </li>
@@ -1488,21 +2028,10 @@ const WebNavigation = () => {
                       :
                       ''
                     }
-                    {containers.tipo_contenedor === 6 ?
+                    {dataEditContainer?.item?.tipo_contenedor === 6 ?
                       <div>
-                        <div className="item_web-page">
-                          <p>Titulo</p>
-
-                        </div>
-                        <div className="item_web-page">
-                          <p>Imagen del item</p>
-                          <div className="container__change_banner_update" style={{ backgroundImage: `url(${banners[index]?.imagen})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                            <label className="custom-file-upload">
-                              <small> Seleccionar archivo</small>
-                              {/* <input id="file-upload1" type="file" onChange={handleImageContainerChange} /> */}
-                            </label>
-                          </div>
-                        </div>
+                        
+                        <SmallBannerEditor />
                       </div>
                       :
                       ''
@@ -1752,7 +2281,7 @@ const WebNavigation = () => {
                     <div className={`content ${selectTypesSections ? 'active' : ''}`} >
                       <ul className={`options ${selectTypesSections ? 'active' : ''}`} style={{ opacity: selectTypesSections ? '1' : '0' }}>
                         {web.secciones && web.secciones.map((section: any) => (
-                          <li key={section.id} onClick={() => handleTypesSectionsChange(section, index)}>
+                          <li key={section.id} onClick={() => handleTypesSectionsChange(section)}>
                             {section.seccion}
                           </li>
                         ))}
@@ -1850,13 +2379,13 @@ const WebNavigation = () => {
                   </a>
                 ))}
               </div>
-              <Reorder.Group axis="y" values={containers} onReorder={setBanners}>
+              <Reorder.Group axis="y" values={containers} onReorder={setContainers}>
                 {containers.map((item: any, index: any) => (
                   <Reorder.Item value={item} key={item.id}>
                     <div className="container__section_container">
                       {item.tipo_contenedor === 1 &&
                         <div className="banner_web-page-u">
-                          <Banner item={item} dataEditContainer={dataEditContainer} banners={containers} index={index} />
+                          <Banner item={item} index={index} />
                           {index !== containers[index].orden ?
                             <button className="btn__general-purple btn_save_order_web" onClick={() => updateContainerOrder(item, index)}>Guardar orden</button>
                             :
@@ -1876,7 +2405,7 @@ const WebNavigation = () => {
                       }
                       {item.tipo_contenedor == 2 &&
                         <div className="banner_web-page-u">
-                          <Services item={item} dataEditContainer={dataEditContainer} index={index} subItems={true} editServices={editServicePadre} />
+                          <Cards item={item} dataEditContainer={dataEditContainer} />
                           {index !== containers[index].orden ?
                             <button className="btn__general-purple btn_save_order_web" onClick={() => updateContainerOrder(item, index)}>Guardar orden</button>
                             :
@@ -1939,7 +2468,7 @@ const WebNavigation = () => {
                       } */}
                       {item.tipo_contenedor === 5 &&
                         <div className="carousel_web-page-u">
-                          <Carousel item={item} selectedTypeFamily={selectedTypeFamily} />
+                          <ModernCarousel item={item} selectedTypeFamily={selectedTypeFamily} />
                           {index !== containers[index].orden ?
                             <button className="btn__general-purple btn_save_order_web" onClick={() => updateContainerOrder(item, index)}>Guardar orden</button>
                             :
@@ -1960,7 +2489,7 @@ const WebNavigation = () => {
                       {item.tipo_contenedor === 6 &&
                         <div className="banner_web-page-u">
                           <SmallBanner item={item} banners={banners} index={index} />
-                          {index !== banners[index].orden ?
+                          {index !== containers[index].orden ?
                             <button className="btn__general-purple btn_save_order_web" onClick={() => updateContainerOrder(item, index)}>Guardar orden</button>
                             :
                             ''
@@ -1979,7 +2508,7 @@ const WebNavigation = () => {
                       }
                       {item.tipo_contenedor == 4 &&
                         <div className="banner_web-page-u">
-                          <ClientsSlider />
+                          <Slider item={item} />
                           {/* {index !== banners[index].orden ?
                             <button className="btn__general-purple btn_save_order_web" onClick={() => updateContainerOrder(item, index)}>Guardar orden</button>
                             :
@@ -1999,7 +2528,7 @@ const WebNavigation = () => {
                       }
                       {item.tipo_contenedor == 8 &&
                         <div className="banner_web-page-u">
-                          <AutomaticSlider />
+                          <Testimonials />
                           <div className="tools_edits">
                             <div className="tools_edits_container">
                               <div>
@@ -2015,6 +2544,72 @@ const WebNavigation = () => {
                       {item.tipo_contenedor === 7 &&
                         <div>
                           <Form />
+                          <div className="tools_edits">
+                            <div className="tools_edits_container">
+                              <div>
+                                <svg className="icon_edit" xmlns="http://www.w3.org/2000/svg" width='18' onClick={() => containerEditor(item, index)} viewBox="0 0 512 512"><path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" /></svg>
+                              </div>
+                              <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width='15' fill="#e61414" onClick={() => deleteContainer(item)} viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" /></svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      }
+
+                      {item.tipo_contenedor === 9 &&
+                        <div>
+                          <ProductCatalog />
+                          <div className="tools_edits">
+                            <div className="tools_edits_container">
+                              <div>
+                                <svg className="icon_edit" xmlns="http://www.w3.org/2000/svg" width='18' onClick={() => containerEditor(item, index)} viewBox="0 0 512 512"><path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" /></svg>
+                              </div>
+                              <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width='15' fill="#e61414" onClick={() => deleteContainer(item)} viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" /></svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                      {item.tipo_contenedor === 10 &&
+                        <div>
+                          <Promotions />
+                          <div className="tools_edits">
+                            <div className="tools_edits_container">
+                              <div>
+                                <svg className="icon_edit" xmlns="http://www.w3.org/2000/svg" width='18' onClick={() => containerEditor(item, index)} viewBox="0 0 512 512"><path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" /></svg>
+                              </div>
+                              <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width='15' fill="#e61414" onClick={() => deleteContainer(item)} viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" /></svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                      {item.tipo_contenedor === 11 &&
+                        <div>
+                          <AboutUs />
+                          <div className="tools_edits">
+                            <div className="tools_edits_container">
+                              <div>
+                                <svg className="icon_edit" xmlns="http://www.w3.org/2000/svg" width='18' onClick={() => containerEditor(item, index)} viewBox="0 0 512 512"><path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" /></svg>
+                              </div>
+                              <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width='15' fill="#e61414" onClick={() => deleteContainer(item)} viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" /></svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                      {item.tipo_contenedor === 12 &&
+                        <div>
+                          <BranchSection />
+                          {index !== containers[index].orden ?
+                            <button className="btn__general-purple btn_save_order_web" onClick={() => updateContainerOrder(item, index)}>Guardar orden</button>
+                            :
+                            ''
+                          }
                           <div className="tools_edits">
                             <div className="tools_edits_container">
                               <div>
