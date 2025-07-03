@@ -9,6 +9,10 @@ const APIs = {
     return ConfigurationAPIs.post(path, { email, password });
   },
 
+  createArticles: async (data: any, customPath?: string) => {
+    const path = customPath || 'articulo_create';
+    return ConfigurationAPIs.post(path, data)
+  },
 
   getWebPage: async (id: number, customPath?: string) => {
     const path = customPath || `pagina_cliente/get/${id}`;

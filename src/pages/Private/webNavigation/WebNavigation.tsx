@@ -40,6 +40,7 @@ import { BranchSection } from "./containers/BranchSection";
 import ProductCatalog from "./containers/ProductCatalog";
 import { useEditorBannerStore } from "../../../zustand/web-page/EditorBanner";
 import SmallBannerEditor from "./containers/editores/EditorSmallBanner";
+import { ArticleCreationForm } from "./sections/CreateArticles";
 
 const WebNavigation = () => {
   const userState = useUserStore(state => state.user);
@@ -459,21 +460,9 @@ const WebNavigation = () => {
 
   const [validateSection, setValidateSection] = useState<number>(1)
 
-  const changeSOne = () => {
-    setValidateSection(1)
+  const changeSection = (value: any) => {
+    setValidateSection(value)
   }
-
-  const changeSTwo = () => {
-    setValidateSection(2)
-  }
-
-
-
-  const changeSFour = () => {
-    setValidateSection(4)
-  }
-
-
 
   ///////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////Footer/////////////////////////////////////////
@@ -1447,18 +1436,18 @@ const WebNavigation = () => {
       </header>
       <div className="main__web">
         <div className="sidebar__web-page-one">
-          <button className="item" onClick={changeSOne}>
+          <button className="item" onClick={() => changeSection(1)}>
             Encabezado
           </button>
-          <button className="item" onClick={changeSTwo}>
+          <button className="item" onClick={() => changeSection(2)}>
             Contenedores
           </button>
-          <button className="item" onClick={changeSFour}>
+          <button className="item" onClick={() => changeSection(4)}>
             Productos
           </button>
-          {/* <button className="item"onClick={changeSFive}>
-            Footer
-          </button> */}
+          <button className="item"onClick={() => changeSection(5)}>
+            Articulos
+          </button>
           <div>
           </div>
         </div>
@@ -2346,8 +2335,10 @@ const WebNavigation = () => {
           </div>
         }
 
-        {web && (
-          <div ref={mainWebpageRef} style={overFlow} className={`main__webpage ${stateResponse ? 'response' : ''} `} >
+        {validateSection == 5 ?
+         <ArticleCreationForm />
+        :
+        <div ref={mainWebpageRef} style={overFlow} className={`main__webpage ${stateResponse ? 'response' : ''} `} >
             <div className="hero__web-page-edit">
               <div className='hero__web-page_container'>
                 <div className="logo_web-page" style={{ backgroundImage: `url(${logoImage})` }}>
@@ -2682,7 +2673,7 @@ const WebNavigation = () => {
               </div>
             </footer>
           </div>
-        )}
+        }
       </div>
     </div>
   );
