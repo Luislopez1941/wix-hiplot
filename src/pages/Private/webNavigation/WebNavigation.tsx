@@ -14,6 +14,7 @@ import serviceJson from "./jsons/services.json";
 import './styles/editor.css'
 import { useEditorStore } from "../../../zustand/web-page/Editor";
 import { useWebStore } from "../../../zustand/web-page/StoreWebPage";
+import { CollectionBuilder } from "./sections/collection/CollectionBuilder";
 
 import ban from '../../../assets/web-navigation/img/banner.png'
 import serv from '../../../assets/web-navigation/img/servicios.png'
@@ -1445,8 +1446,11 @@ const WebNavigation = () => {
           <button className="item" onClick={() => changeSection(4)}>
             Productos
           </button>
-          <button className="item"onClick={() => changeSection(5)}>
+          <button className="item" onClick={() => changeSection(5)}>
             Articulos
+          </button>
+          <button className="item" onClick={() => changeSection(6)}>
+            Coleciones
           </button>
           <div>
           </div>
@@ -2019,7 +2023,7 @@ const WebNavigation = () => {
                     }
                     {dataEditContainer?.item?.tipo_contenedor === 6 ?
                       <div>
-                        
+
                         <SmallBannerEditor />
                       </div>
                       :
@@ -2335,10 +2339,13 @@ const WebNavigation = () => {
           </div>
         }
 
-        {validateSection == 5 ?
-         <ArticleCreationForm />
-        :
-        <div ref={mainWebpageRef} style={overFlow} className={`main__webpage ${stateResponse ? 'response' : ''} `} >
+        {validateSection == 5 || validateSection == 6 ?
+          validateSection == 5 ?
+            <ArticleCreationForm />
+            :
+            <CollectionBuilder />
+          :
+          <div ref={mainWebpageRef} style={overFlow} className={`main__webpage ${stateResponse ? 'response' : ''} `} >
             <div className="hero__web-page-edit">
               <div className='hero__web-page_container'>
                 <div className="logo_web-page" style={{ backgroundImage: `url(${logoImage})` }}>

@@ -1,0 +1,151 @@
+.collection-builder {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fafbfc 0%, #f8f9fa 100%);
+  padding: 24px 0;
+}
+
+.collection-builder-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.back-button {
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.collection-builder-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.collection-builder-icon {
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.collection-builder-title h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+}
+
+.collection-builder-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.collection-builder-left,
+.collection-builder-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.collection-name-section,
+.article-search-section,
+.collection-builder-right {
+  background-color: var(--surface);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-light);
+}
+
+.collection-name-section .label {
+  display: block;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.article-search-section h3,
+.collection-builder-right h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 16px 0;
+}
+
+.selected-articles-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.selected-articles-header h3 {
+  margin: 0;
+}
+
+.selected-articles-header .btn {
+  border-radius: 6px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+  transform: none;
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 1024px) {
+  .collection-builder-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .collection-builder {
+    padding: 16px 0;
+  }
+
+  .collection-builder-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .collection-builder-title h1 {
+    font-size: 1.75rem;
+  }
+
+  .collection-name-section,
+  .article-search-section,
+  .collection-builder-right {
+    padding: 20px;
+  }
+
+  .selected-articles-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

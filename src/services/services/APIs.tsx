@@ -123,6 +123,11 @@ const APIs = {
     return ConfigurationAPIs.post(path, data)
   },
 
+    getArticlesGlobal: async (data: any, customPath?: string) => {
+    const path = customPath || 'articulos_get';
+    return ConfigurationAPIs.post(path, data)
+  },
+
   getArticlesForVendedor: async (data: any, customPath?: string) => {
     const path = customPath || 'articulos_get_for_vendedor';
     return ConfigurationAPIs.post(path, data)

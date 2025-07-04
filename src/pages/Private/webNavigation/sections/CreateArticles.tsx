@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { ImageUpload } from "../../../../components/general/ImageUpload";
-import { Save, Eye, Tag, DollarSign } from "lucide-react";
+import { Save, Eye, Tag } from "lucide-react";
 import "./styles/CreateArticles.css";
 import APIs from "../../../../services/services/APIs";
 import Swal from 'sweetalert2';
@@ -23,26 +23,10 @@ const articleSchema = z.object({
 
 type ArticleFormData = z.infer<typeof articleSchema>;
 
-const categories = [
-  "Electrónicos",
-  "Ropa y Accesorios",
-  "Hogar y Jardín",
-  "Deportes y Ocio",
-  "Vehículos",
-  "Libros y Medios",
-  "Salud y Belleza",
-  "Juguetes y Niños",
-  "Arte y Coleccionables",
-  "Otros",
-];
-
-const conditions = ["Nuevo", "Como nuevo", "Muy bueno", "Bueno", "Aceptable"];
 
 export function ArticleCreationForm() {
   const [images, setImages] = useState<File[]>([]);
   const [base64Images, setBase64Images] = useState<string[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
-  const [currentTag, setCurrentTag] = useState("");
 
   const form = useForm<ArticleFormData>({
     resolver: zodResolver(articleSchema),
@@ -58,20 +42,7 @@ export function ArticleCreationForm() {
     },
   });
 
-  const addTag = () => {
-    if (currentTag.trim() && !tags.includes(currentTag.trim())) {
-      const newTags = [...tags, currentTag.trim()];
-      setTags(newTags);
-      form.setValue("tags", newTags.join(", "));
-      setCurrentTag("");
-    }
-  };
 
-  const removeTag = (tagToRemove: string) => {
-    const newTags = tags.filter((tag) => tag !== tagToRemove);
-    setTags(newTags);
-    form.setValue("tags", newTags.join(", "));
-  };
 
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -84,57 +55,55 @@ export function ArticleCreationForm() {
 
   const createArticle = async () => {
     try {
-      // Convertir imágenes seleccionadas a base64
+      // ⚠️ OBTENER TODOS LOS VALORES DEL FORMULARIO
+      const values = form.getValues();
+
+      // Convertir imágenes seleccionadas a base64  
       const base64s = await Promise.all(images.map(fileToBase64));
 
       const data: any = {
         id: 0,
-        tipo: 3,
-        codigo: 'values.codigo',
-        descripcion: 'values.description',
-        id_familia: 1,
-        activo: 0,
-        imagenes: '',
+        tipo: 2,
+        codigo: values.codigo,
+        descripcion: values.title,
+        id_familia: 16,
+        materia_prima: 2,
+        activo: 1,
+        imagenes: [{img_url: base64s[0]}],
         tipo_de_cobro: 1,
         id_plantilla: 1,
-        base_max: '',
-        altura_max: '',
-        multiplos_de: '',
+        base_max: 0,
+        altura_max: 0,
+        multiplos_de: 0,
         clave_sat: '',
-        unidad_sat: 1,
+        unidad_sat: '',
         visualizacion_web: true,
         indicaciones: '',
         notas_web: '',
         condiciones_compra: '',
-        bajo_pedido: '',
-        vender_sin_stock: true,
+        bajo_pedido: false,
+        vender_sin_stock: false,
         desabasto: false,
-        iva_excento: '',
-        precio_libre: '',
-        ultimas_piezas: '',
-        fyv: '',
-        consultar_cotizador: '',
-        consultar_te: '',
-
+        iva_excento: false,
+        precio_libre: false,
+        ultimas_piezas: false,
+        fyv: false,
+        consultar_cotizador: false,
+        consultar_te: false,
         /////////////////////////////////Modales//////////////////////////////////////// 
-        sucursales: { id_sucursal: 1, name: 'web' },
+        sucursales: [{ id_sucursal: 2, name: 'web', id_almacen_pred: 1, disponible: false }],
       };
 
-      console.log(data)
+      console.log(data);
 
       let response = await APIs.createArticles(data);
-      console.log('response',response)
+      console.log('response', response);
       Swal.fire('Artículo creado exitosamente', '', 'success');
 
     } catch (error) {
       console.error('Ocurrió un error al crear/actualizar el artículo', error);
       Swal.fire('Ocurrió un error al crear el artículo', '', 'error');
     }
-  };
-
-  const formatPrice = (value: string) => {
-    const number = value.replace(/[^\d]/g, "");
-    return number ? `$${parseInt(number).toLocaleString()}` : "";
   };
 
   return (
@@ -148,7 +117,7 @@ export function ArticleCreationForm() {
         </p>
       </div>
 
-      <form  className="form">
+      <form className="form">
         <div className="form-grid">
           {/* Left Column - Main Info */}
           <div className="form-section">
@@ -207,73 +176,6 @@ export function ArticleCreationForm() {
                     </span>
                   )}
                 </div>
-
-                <div className="form-grid-2">
-                  <div className="form-field">
-                    <label className="form-label">Categoría</label>
-                    <select className="form-select" {...form.register("category")}>
-                      <option value="">Seleccionar</option>
-                      {categories.map((category) => (
-                        <option key={category} value={category}>
-                          {category}
-                        </option>
-                      ))}
-                    </select>
-                    {form.formState.errors.category && (
-                      <span className="form-error">
-                        {form.formState.errors.category.message}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="form-field">
-                    <label className="form-label">Condición</label>
-                    <select className="form-select" {...form.register("condition")}>
-                      <option value="">Seleccionar</option>
-                      {conditions.map((condition) => (
-                        <option key={condition} value={condition}>
-                          {condition}
-                        </option>
-                      ))}
-                    </select>
-                    {form.formState.errors.condition && (
-                      <span className="form-error">
-                        {form.formState.errors.condition.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="card">
-              <div className="card-header">
-                <h3 className="card-title">
-                  <DollarSign className="icon" />
-                  Precio
-                </h3>
-              </div>
-              <div className="card-content">
-                <div className="form-field">
-                  <label className="form-label">Precio de venta</label>
-                  <input
-                    className="form-input"
-                    placeholder="$0"
-                    {...form.register("price")}
-                    onChange={(e) => {
-                      const formatted = formatPrice(e.target.value);
-                      form.setValue("price", formatted);
-                    }}
-                  />
-                  <p className="form-description">
-                    Ingresa el precio en pesos colombianos
-                  </p>
-                  {form.formState.errors.price && (
-                    <span className="form-error">
-                      {form.formState.errors.price.message}
-                    </span>
-                  )}
-                </div>
               </div>
             </div>
           </div>
@@ -291,11 +193,9 @@ export function ArticleCreationForm() {
                 <ImageUpload
                   onImagesChange={async (selectedFiles) => {
                     setImages(selectedFiles);
-
                     const converted = await Promise.all(
                       selectedFiles.map(fileToBase64)
                     );
-
                     setBase64Images(converted);
                   }}
                 />
@@ -320,48 +220,6 @@ export function ArticleCreationForm() {
                 )}
               </div>
             </div>
-
-            <div className="card">
-              <div className="card-header">
-                <h3 className="card-title">Etiquetas</h3>
-                <p className="card-description">
-                  Añade palabras clave para ayudar a otros a encontrar tu
-                  artículo
-                </p>
-              </div>
-              <div className="card-content">
-                <div className="tags-container">
-                  <input
-                    className="form-input tags-input"
-                    placeholder="Añadir etiqueta..."
-                    value={currentTag}
-                    onChange={(e) => setCurrentTag(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addTag();
-                      }
-                    }}
-                  />
-                  <button type="button" className="add-tag-button" onClick={addTag}>
-                    Añadir
-                  </button>
-                </div>
-                {tags.length > 0 && (
-                  <div className="tags-list">
-                    {tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="tag-badge"
-                        onClick={() => removeTag(tag)}
-                      >
-                        {tag} ×
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
         </div>
 
@@ -371,7 +229,13 @@ export function ArticleCreationForm() {
             <Eye className="icon-small" />
             Vista previa
           </button>
-          <button onClick={createArticle} type="button" className="button-primary">
+
+          {/* ✅ Usamos onClick, no handleSubmit */}
+          <button
+            onClick={createArticle}
+            type="button"
+            className="button-primary"
+          >
             <Save className="icon-small" />
             Publicar artículo
           </button>

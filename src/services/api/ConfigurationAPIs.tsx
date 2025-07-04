@@ -7,7 +7,7 @@ class ApiService {
 
   // constructor(baseURL: string = 'http://hiplot.dyndns.org:92/') {
   // constructor(baseURL: string = 'http://127.0.0.1:8000') {//LOCALHOST LENOVO GEO
-  constructor(baseURL: string = 'http://hiplot.dyndns.org:84/api_dev') {
+  constructor(baseURL: string = 'http://hiplot.dyndns.org:84/api_dev_mode') {
     this.axiosInstance = axios.create({
       baseURL,
       headers: {
@@ -32,13 +32,14 @@ class ApiService {
 
   public post<T>(path: string, data: any): Promise<T> {
     const url = `/${path}`;
-    return this.request<T>('POST', url, data);
+    return this.request<T>('POST', url, data);   
   }
 
   public put<T>(path: string, data: any): Promise<T> {
     const url = `/${path}`;
     return this.request<T>('PUT', url, data);
   }
+
   public delete<T>(path: string): Promise<T> {
     const url = `/${path}`;
     return this.request<T>('DELETE', url);

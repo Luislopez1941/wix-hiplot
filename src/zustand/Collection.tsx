@@ -3,8 +3,8 @@ import { create } from 'zustand';
 
 interface StoreState {
 
-  modalArticle: any;
-  setModalArticle: (modal: any) => void;
+  article: any;
+  setArticle: (modal: any) => void;
 
   subModal: any;
   setSubModal: (modal: any) => void;
@@ -12,13 +12,13 @@ interface StoreState {
 
 }
 
-export const storeArticles = create<StoreState>((set) => ({
+export const storeCollection = create<StoreState>((set) => ({
  
 
 
 
-  modalArticle: '',
-  setModalArticle: (modal) => set({ modalArticle: modal }),
+  article: '',
+  setArticle: (x) => set({ article: x }),
 
   subModal: '',
   setSubModal: (modal) => set({ subModal: modal }),
