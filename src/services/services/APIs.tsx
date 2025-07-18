@@ -123,10 +123,24 @@ const APIs = {
     return ConfigurationAPIs.post(path, data)
   },
 
-    getArticlesGlobal: async (data: any, customPath?: string) => {
+  getArticlesGlobal: async (data: any, customPath?: string) => {
     const path = customPath || 'articulos_get';
     return ConfigurationAPIs.post(path, data)
   },
+
+
+
+  getCollectionByFamily: async (familyId: number, customPath?: string) => {
+    const path = customPath || `get_colecciones_x_familia/${familyId}`;
+    return ConfigurationAPIs.get(path)
+  },
+
+  updateArticles: async (data: any) => {
+    const path = `update_articulo/${data.id}`;
+    return ConfigurationAPIs.put(path, data)
+  },
+
+
 
   getArticlesForVendedor: async (data: any, customPath?: string) => {
     const path = customPath || 'articulos_get_for_vendedor';
@@ -175,6 +189,14 @@ const APIs = {
 
     return response.json();
   },
+
+
+
+
+
+
+
+  /////////////////////////////////////////////////////// Colleciones ////////////////////////////////////////////////////////////////////////
 }
 
 

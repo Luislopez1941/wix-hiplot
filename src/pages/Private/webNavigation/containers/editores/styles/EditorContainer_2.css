@@ -1,0 +1,339 @@
+/* Editor Cards - All styles scoped to avoid global conflicts */
+.editor-cards {
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 80vh;
+  overflow-y: auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+.editor-cards-container {
+ 
+}
+
+.editor-cards__section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #e1251b;
+  padding-bottom: 8px;
+}
+
+.editor-cards__header-controls {
+  margin-bottom: 32px;
+}
+
+.editor-cards__row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.editor-cards__property-group {
+  margin-bottom: 16px;
+}
+
+.editor-cards__property-group label {
+  display: block;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.editor-cards__property-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+}
+
+.editor-cards__property-input:focus {
+  outline: none;
+  border-color: #e1251b;
+  box-shadow: 0 0 0 3px rgba(225, 37, 27, 0.1);
+}
+
+.editor-cards__property-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.editor-cards__range-input {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #e5e7eb;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.editor-cards__range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #e1251b;
+  cursor: pointer;
+}
+
+.editor-cards__range-input::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #e1251b;
+  cursor: pointer;
+  border: none;
+}
+
+/* Color Palette Styles - Scoped */
+.editor-cards .color-check-container {
+  margin-top: 8px;
+}
+
+.editor-cards .custom-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.editor-cards .custom-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.editor-cards .checkmark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.editor-cards .custom-checkbox input[type="checkbox"]:checked + .checkmark {
+  background-color: #e1251b;
+  border-color: #e1251b;
+}
+
+.editor-cards .custom-checkbox input[type="checkbox"]:checked + .checkmark::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.editor-cards .label-text {
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.editor-cards .palette {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background-color: #f9fafb;
+}
+
+.editor-cards .color-swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.editor-cards .color-swatch:hover {
+  transform: scale(1.1);
+}
+
+.editor-cards .custom-color {
+  grid-column: span 4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.editor-cards .custom-color input[type="color"] {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Cards Management Section - Scoped */
+.editor-cards__cards-section {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 24px;
+}
+
+.editor-cards__cards-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.editor-cards__cards-header h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.editor-cards__add-button {
+  background-color: #e1251b;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+}
+
+.editor-cards__add-button:hover {
+  background-color: #b20602;
+}
+
+.editor-cards__card-selector {
+  margin-bottom: 24px;
+}
+
+.editor-cards__select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background-color: #ffffff;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.editor-cards__select:focus {
+  outline: none;
+  border-color: #e1251b;
+  box-shadow: 0 0 0 3px rgba(225, 37, 27, 0.1);
+}
+
+/* Card Editor - Scoped */
+.editor-cards__card-editor {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.editor-cards__card-preview {
+  position: relative;
+}
+
+.editor-cards__preview-image {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+.editor-cards .card-badge-preview {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.editor-cards .card-badge-preview.popular {
+  background: #e1251b;
+  color: white;
+}
+
+.editor-cards .card-badge-preview.nuevo {
+  background: #10b981;
+  color: white;
+}
+
+.editor-cards .card-badge-preview.promoción {
+  background: #fbbf24;
+  color: #111827;
+}
+
+.editor-cards__card-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.editor-cards__file-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background-color: #ffffff;
+  font-family: inherit;
+}
+
+.editor-cards__remove-button {
+  background-color: #dc2626;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.editor-cards__remove-button:hover:not(:disabled) {
+  background-color: #b91c1c;
+}
+
+.editor-cards__remove-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Responsive - Scoped */
+@media (max-width: 768px) {
+  .editor-cards__card-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-cards .palette {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .editor-cards__cards-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+}

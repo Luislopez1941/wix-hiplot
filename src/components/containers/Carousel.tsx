@@ -65,7 +65,7 @@ const ModernCarousel: React.FC<any> = ({
     return (
       <div
         className="carousel-container"
-        style={{ backgroundColor: item?.style?.background_color }}
+        // style={{ backgroundColor: item?.style?.background_color }}
       >
         <div>
           <div className="carousel-header">
@@ -93,7 +93,8 @@ const ModernCarousel: React.FC<any> = ({
 
   if (!loading && articles.length === 0) {
     return (
-      <div className="carousel-container" style={{ backgroundColor: item?.style?.background_color }}
+      <div className="carousel-container" 
+      // style={{ backgroundColor: item?.style?.background_color }}
       >
         <div>
           <div className="carousel-header">
@@ -117,8 +118,8 @@ const ModernCarousel: React.FC<any> = ({
   return (
     <div
       className="carousel"
-      style={{ backgroundColor: item?.style?.background_color }}
-    >
+      // style={{ backgroundColor: item?.style?.background_color }}
+      >
       <div className="carousel-container">
         <div>
           {/* Header */}

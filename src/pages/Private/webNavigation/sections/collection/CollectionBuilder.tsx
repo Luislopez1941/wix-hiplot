@@ -7,12 +7,6 @@ import APIs from "../../../../../services/services/APIs";
 import Swal from 'sweetalert2';
 import useUserStore from "../../../../../zustand/General";
 
-interface Article {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-}
 
 
 
@@ -35,8 +29,9 @@ export function CollectionBuilder() {
 
     let data = {
       id: 0,
-      nombre: '',
-      id_familia: 0,
+      nombre: collectionName,
+      tipo: 2,
+      id_familia: 1,  
       id_empresa: 0,
       id_sucursal: user_id.sucursal_id,
       empresa: {
@@ -127,7 +122,7 @@ export function CollectionBuilder() {
 
           <div className="collection-builder-right">
             <div className="selected-articles-header">
-              <h3>Artículos seleccionados ({article.length})</h3>
+              <h3>Artículos seleccionados ({article?.length})</h3>
               <button
                 onClick={handleSave}
                 className="btn btn-primary">

@@ -9,20 +9,25 @@ export function ArticleCard({
   onAdd,
   onRemove,
 }: any) {
-      const setArticle = storeCollection(state => state.setArticle)
-  
-  const { article }: any = storeCollection()
+  const setArticle = storeCollection(state => state.setArticle)
+  const setArticleDelete = storeCollection(state => state.setArticleDelete)
 
-const remove = () => {
-  let filter = article.filter((_: any, i: number) => i !== index)
-  setArticle(filter)
-}
+  const { article, articleDelete }: any = storeCollection()
+
+  const remove = () => {
+    const articleToRemove = article[index];
+    const filtered = article.filter((_: any, i: number) => i !== index);
+
+    setArticleDelete([...articleDelete, articleToRemove.id]);
+    setArticle(filtered);
+  };
+
 
 
   return (
     <div className={`article-card article-card--${variant}`}>
       <div className="article-card-content">
-      
+
         <div className="article-card-info">
           <div className="article-card-header">
             <h4 className="article-card-title">{a?.codigo}</h4>
@@ -50,9 +55,9 @@ const remove = () => {
             </button>
           )}
 
-          {variant === "selected" && onRemove && (
+          {variant === "selected" && (
             <button
-              onClick={remove}
+              onClick={onRemove ? onRemove : remove}
               className="btn btn-sm btn-ghost remove-btn"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none">

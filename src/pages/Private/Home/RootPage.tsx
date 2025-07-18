@@ -62,7 +62,7 @@ const RootHome: React.FC = () => {
             if (result?.color_primario !== undefined) {
                 document.documentElement.style.setProperty('--color-header-web-page', result.color_primario);
             }
-            document.documentElement.style.setProperty('--secondary-color-web-page', result?.color_secundario || '#000000');
+            document.documentElement.style.setProperty('--secondary-color-web-page', result?.color_secundario);
             setLogoImage(result?.logo);
             setHeaderAndFooter(result);
         } catch (error) {
@@ -84,6 +84,8 @@ const RootHome: React.FC = () => {
         setContainers(parsedContainer)
     }
 
+    console.log(containers)
+
     return (
         <div className='root__dashboard'>
             <div className='hero' style={{ backgroundColor: headerAndFooter?.color_primario }}>
@@ -95,7 +97,6 @@ const RootHome: React.FC = () => {
                                 <li onClick={() => section(x)}
                                     className='nav__item'
                                     dangerouslySetInnerHTML={{ __html: x.seccion }}
-                                    style={{ color: x.imagen.color }}
                                 ></li>
                             </li>
                         ))}
@@ -112,7 +113,7 @@ const RootHome: React.FC = () => {
                     {item.tipo_contenedor === 3 && <Description item={item} />}
                     {item.tipo_contenedor === 4 && <Slider />}
                     {item.tipo_contenedor === 5 && <ModernCarousel item={item} />}
-                    {item.tipo_contenedor === 6 && <InfoBanner />}
+                    {item.tipo_contenedor === 6 && <InfoBanner item={item}/>}
                     {item.tipo_contenedor === 7 && <Form />}
                     {item.tipo_contenedor === 8 && <Testimonials />}
                     {item.tipo_contenedor === 9 && <ProductCatalog />}

@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ImageUpload } from "../../../../components/general/ImageUpload";
+import { ImageUpload } from "../../../../../components/general/ImageUpload";
 import { Save, Eye, Tag } from "lucide-react";
 import "./styles/CreateArticles.css";
-import APIs from "../../../../services/services/APIs";
+import APIs from "../../../../../services/services/APIs";
 import Swal from 'sweetalert2';
 
 const articleSchema = z.object({
@@ -160,22 +160,7 @@ export function ArticleCreationForm() {
                   )}
                 </div>
 
-                <div className="form-field">
-                  <label className="form-label">Descripción corta</label>
-                  <textarea
-                    className="form-textarea"
-                    placeholder="Descripción breve y atractiva de tu artículo..."
-                    {...form.register("description")}
-                  />
-                  <p className="form-description">
-                    Esta descripción aparecerá en las búsquedas
-                  </p>
-                  {form.formState.errors.description && (
-                    <span className="form-error">
-                      {form.formState.errors.description.message}
-                    </span>
-                  )}
-                </div>
+                
               </div>
             </div>
           </div>

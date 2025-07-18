@@ -12,7 +12,7 @@
 
 
 .logo {
-    width: 60px;
+    width: 150px;
     height: 60px;
     background-size: contain;
     background-repeat: no-repeat;
@@ -26,11 +26,11 @@
     list-style: none;
 }
 
-.hero__container .nav__items .nav__link {
-    color: #fff;
+.hero__container .nav__items .nav__item {
+    color: var(--secondary-color-web-page);
     background: transparent;
     border: none;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
 }     
 
@@ -44,3 +44,4 @@
     padding: 5px 10px;
     border-radius: 10px;
 }
+

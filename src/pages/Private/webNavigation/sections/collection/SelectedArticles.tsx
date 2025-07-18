@@ -1,13 +1,21 @@
 import { ArticleCard } from "./ArticleCard";
 import "./styles/SelectedArticles.css";
 import { storeCollection } from "../../../../../zustand/Collection";
+import { useEffect } from "react";
 
 
 
-export function SelectedArticles() {
+export function SelectedArticles({ articulos, onRemove }: any) {
   const { article }: any = storeCollection()
+  const setArticle = storeCollection(state => state.setArticle)
 
-  if (article.length === 0) {
+  useEffect(() => {
+    setArticle(articulos)
+  }, [articulos])
+  
+
+
+  if (article?.length === 0) {
     return (
       <div className="selected-articles-empty">
         <div className="empty-icon">
@@ -36,12 +44,12 @@ export function SelectedArticles() {
   return (
     <div className="selected-articles">
       <div className="selected-articles-list">
-        {article.map((a: any, index: number) => (
+        {article?.map((a: any, index: number) => (
           <ArticleCard
             key={a.id}
             a={a}
             index={index}
-            onRemove={() => onRemove(a.id)}
+            onRemove={onRemove}
             variant="selected"
           />
         ))}

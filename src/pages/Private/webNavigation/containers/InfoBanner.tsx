@@ -1,14 +1,10 @@
 import React from "react";
-import { Package, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import "./styles/InfoBanner.css";
 
 
 
-const InfoBanner: React.FC<any> = ({
-  message = "Nuevos productos disponibles",
-  type = "info",
-  showIcon = true,
-}) => {
+const InfoBanner: React.FC<any> = ({ item }) => {
 
   const handleCTAClick = () => {
     // Scroll to products section
@@ -18,25 +14,32 @@ const InfoBanner: React.FC<any> = ({
     }
   };
 
+  console.log('itemsssssssssssssssssss', item)
+
   return (
-    <div className={`info-banner info-banner--${type}`}>
+    <div className={`info-banner info-banner`} style={{ background: item.style?.background}}>
       <div className="info-banner__container">
         {/* Lado izquierdo - Icono grande y mensaje */}
         <div className="info-banner__left">
           <div className="info-banner__icon-wrapper">
-            {showIcon && (
-              <div className="info-banner__icon">
-                <Package size={48} />
+              <div className="info-banner__icon" style={{background: item.contenido?.icono?.styles?.background}}>
+                <img src={item?.contenido?.icono?.icono} alt="" />
               </div>
-            )}
+          
           </div>
-
           <div className="info-banner__text-content">
-            <h3 className="info-banner__title">{message}</h3>
-            <p className="info-banner__subtitle">
-              Gafetes profesionales y tarjetas personalizadas con acabados premium
+            <h3
+              className="info-banner__title"
+              style={{ color: item?.contenido?.title?.styles?.color, fontSize: `${item.contenido.title.styles.font_size}px`}}>
+              {item?.contenido?.title?.text}
+            </h3>
+            <p
+              className="info-banner__subtitle"
+              style={{ color: item?.contenido?.subtitle?.styles?.color, fontSize: `${item.contenido.subtitle.styles.font_size}px`}}>
+              {item?.contenido?.subtitle?.text}
             </p>
           </div>
+
         </div>
 
 

@@ -14,7 +14,7 @@ import serviceJson from "./jsons/services.json";
 import './styles/editor.css'
 import { useEditorStore } from "../../../zustand/web-page/Editor";
 import { useWebStore } from "../../../zustand/web-page/StoreWebPage";
-import { CollectionBuilder } from "./sections/collection/CollectionBuilder";
+
 
 import ban from '../../../assets/web-navigation/img/banner.png'
 import serv from '../../../assets/web-navigation/img/servicios.png'
@@ -27,21 +27,24 @@ import EditorTitulo from "./containers/editores/Description/EditorTitulo";
 import { editorContainerStore } from "../../../zustand/web-page/EditorContainer";
 import EditorContainers from "./containers/editores/Description/EditorTitleContainers";
 import EditorCDescription from "./containers/editores/Description/EditorDescriptionContainers";
-import EditorImage from "./containers/editores/Description/EditorImage";
-import EditorTitleContainers from "./containers/editores/Description/EditorTitleContainers";
-import EditorDescriptionContainers from "./containers/editores/Description/EditorDescriptionContainers";
+
 import Slider from "./containers/Slider";
 import Testimonials from "../../../components/containers/Testimonials";
 import EditorBanner from "./containers/editores/EditorBanner";
-import EditorSlider from "./containers/editores/EditorSlider";
-import Cards from "../../../components/containers/Cards";
+import EditorSlider from "./containers/editores/EditorContainer_4";
+import Cards from "./containers/Cards";
 import Promotions from "./containers/Promotions";
 import AboutUs from "./containers/AboutUs";
 import { BranchSection } from "./containers/BranchSection";
 import ProductCatalog from "./containers/ProductCatalog";
 import { useEditorBannerStore } from "../../../zustand/web-page/EditorBanner";
 import SmallBannerEditor from "./containers/editores/EditorSmallBanner";
-import { ArticleCreationForm } from "./sections/CreateArticles";
+import EditorContainer_2 from "./containers/editores/EditorContainer_2";
+import EditorContainer_3 from "./containers/editores/EditorContainer_3";
+import Articles from "./sections/articles/Article";
+
+import Collections from "./sections/collection/Collections";
+
 
 const WebNavigation = () => {
   const userState = useUserStore(state => state.user);
@@ -96,6 +99,17 @@ const WebNavigation = () => {
   }
 
   const [logoImage, setlogoImage] = useState<any>(null)
+
+
+
+  const fetchC = async () => {
+    await APIs.GetAny("get_colecciones_web")
+
+  }
+
+  useEffect(() => {
+    fetchC()
+  }, [])
 
   const fetch = async () => {
     let response: any = await APIs.getHeaderAndFooter(39)
@@ -826,13 +840,45 @@ const WebNavigation = () => {
         id_seccion,
         id_familia,
         tipo_contenedor,
-
+        contenido: JSON.stringify({
+          title: {
+            text: "Servicios Profesionales",
+            styles: {
+              font_size: 32,
+              font_weight: 700,
+              color: "#000",
+            },
+          },
+          description: {
+            text: "Ofrecemos soluciones integrales para tu empresa con la más alta calidad y acabados premium. Nuestro equipo de expertos se encarga de cada detalle para garantizar resultados excepcionales.",
+            styles: {
+              font_size: 16,
+              font_weight: 400,
+              color: "#c1c1c2ff",
+            },
+          },
+          image: {
+            image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=400&fit=crop",
+            styles: {
+              background: "#ffffffff",
+              border: "12px",
+              order: 1,
+            }
+          }
+        }),
+        style: JSON.stringify({
+          background: '#000'
+        })
       }
 
       // Define la función setData fuera del objeto newData
-      setBanners([...banners, data])
-      const setData = async () => await createContenedor(data);
-      await setData();
+      await createContenedor(data);
+      const container = await getContenedor(sectionId);
+      const parsedContainer = container?.map((x: any) => ({
+        ...x,
+        contenido: safeJSONParse(x.contenido),
+      }));
+      setContainers(parsedContainer)
     }
 
     ////CONTENEDRO DE SLIDER ///////
@@ -843,8 +889,23 @@ const WebNavigation = () => {
         tipo_contenedor,
         contenido: JSON.stringify({
           index: 0,
-          title: "Empresas que confían en nosotros",
-          subtitle: "Más de 500 empresas han elegido nuestros servicios profesionales",
+          title: {
+            text: "Empresas que confían en nosotros",
+            styles: {
+              font_size: 32,
+              font_weight: 700,
+              color: "#000",
+            }
+          },
+          description: {
+            text: "Más de 500 empresas han elegido nuestros servicios profesionales",
+            styles: {
+              font_size: 32,
+              font_weight: 700,
+              color: "#000",
+            }
+
+          },
           company: '',
           experiency: '',
           tailor: '',
@@ -916,9 +977,24 @@ const WebNavigation = () => {
         tipo_contenedor,
         imagen: '',
         titulo: '',
+        styles: {
+          background: '#000'
+        },
         contenido: JSON.stringify({
-          title: "Nuevos productos disponibles",
-          subtitle: "Gafetes profesionales y tarjetas personalizadas con acabados premium",
+          title: {
+            text: "Nuevos productos disponibles",
+            styles: {
+              font_size: 14,
+              color: '#fff'
+            }
+          },
+          subtitle: {
+            text: "Gafetes profesionales y tarjetas personalizadas con acabados premium",
+            styles: {
+              font_size: 12,
+              color: '#fff'
+            }
+          }
         })
       }
 
@@ -969,9 +1045,35 @@ const WebNavigation = () => {
         id_seccion,
         // id_familia: selectedTypeFamily.id,
         tipo_contenedor,
-        imagen: '',
-        // titulo: serviceJson.titulo,
-        // imagen4: serviceJson.descripcion
+        contenido: JSON.stringify({
+          titulo: {
+            text: "Servicios Profesionales",
+            styles: {
+              fontSize: 32,
+              fontWeight: 700,
+              color: "#ffffff",
+            },
+          },
+          descripcion: {
+            text: "Ofrecemos soluciones integrales para tu empresa con la más alta calidad y acabados premium. Nuestro equipo de expertos se encarga de cada detalle para garantizar resultados excepcionales.",
+            styles: {
+              fontSize: 16,
+              fontWeight: 400,
+              color: "#cbd5e1",
+            },
+          },
+          image: {
+            image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=400&fit=crop",
+            styles: {
+              background: "#002539",
+              border: "12px"
+            }
+          }
+        }),
+        style: {
+          background: '#000'
+        }
+
       }
 
       // Define la función setData fuera del objeto newData
@@ -1051,6 +1153,7 @@ const WebNavigation = () => {
   console.log('dataEditContainer', dataEditContainer)
 
   const containerEditor = async (item: any, index: any) => {
+    console.log('index', index)
     setCurrentSlide(0)
     setDataEditContainer({ item: item, index: 0 });
     setIndexContainer(index)
@@ -1213,103 +1316,10 @@ const WebNavigation = () => {
     setContainers(data);
   }
 
+  const [selectedColor] = useState('');
 
 
-  const [enabled, setEnabled] = useState(false);
 
-  const toggleSwitch = () => {
-    setEnabled(!enabled);
-    const data = containers?.map((x: any, index: number) => {
-      if (index === dataEditContainer?.index) {
-        return {
-          ...x,
-          style: {
-            ...x.style,
-            order: {
-              ...x.style.order,
-              order: enabled ? 0 : 1,
-            },
-          },
-        }
-      }
-      return x
-    })
-    setContainers(data)
-  };
-
-  const [showPalette, setShowPalette] = useState(false);
-  const [selectedColor, setSelectedColor] = useState('');
-
-  const handleCheck = () => {
-    setShowPalette(!showPalette);
-  };
-
-  const handleColorSelect = (color: any) => {
-    setSelectedColor(color);
-    const data = containers?.map((x: any, index: number) => {
-      if (index === dataEditContainer?.index) {
-        return {
-          ...x,
-          style: {
-            ...x.style,
-            color: color,
-          },
-        };
-      }
-      return x
-    })
-    setContainers(data)
-
-  };
-
-  const handleCustomColor = (e: any) => {
-    const color = e.target.value;
-    setSelectedColor(color);
-    const data = containers?.map((x: any, index: number) => {
-      if (index === dataEditContainer?.index) {
-        return {
-          ...x,
-          style: {
-            ...x.style,
-            color: color,
-          },
-        };
-      }
-      return x
-    })
-    setContainers(data)
-  };
-
-  const predefinedColors = [
-    '#f44336', '#e91e63', '#9c27b0',
-    '#3f51b5', '#03a9f4', '#4caf50',
-    '#ffeb3b', '#ff9800', '#795548', '#607d8b'
-  ];
-
-  const containerEditorH = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newHeight = Number(e.target.value);
-    // setStyles((prev: any) => ({
-    //   ...prev,
-    //   heightContainer: newHeight,
-    // }));
-
-    // Actualizar el contenedor editado
-    const data = containers?.map((x: any, index: number) => {
-      if (index === dataEditContainer?.index) {
-        return {
-          ...x,
-          style: {
-            ...x.style,
-            heightContainer: newHeight
-          }
-        };
-      }
-      return x;
-    });
-
-    // Guardar los contenedores actualizados
-    setContainers(data);
-  };
 
 
 
@@ -1336,88 +1346,10 @@ const WebNavigation = () => {
     setContainers(data);
   };
 
-  const containerServicesCard = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const border = Number(e.target.value);
-    // Actualizar el contenedor editado
-    const data = containers?.map((x: any, index: number) => {
-      if (index === dataEditContainer?.index) {
-        const updatedSubItems = x.contenido.map((item: any, indexTwo: number) => {
-          if (dataNumberService.index === indexTwo) {
-            return {
-              ...item,
-              styles: {
-                ...item?.styles,
-                border: border
-              }
-            };
 
-          }
-          return item;
-        });
-        return {
-          ...x,
-          contenido: updatedSubItems
-        };
-      }
-      return x;
-    });
-    // Guardar los contenedores actualizados
-    setContainers(data);
-  };
 
-  console.log(containers)
-  const handleCustomColorService = (e: any) => {
-    const color = e.target.value;
-    setSelectedColor(color);
-    const data = containers?.map((x: any, index: number) => {
-      if (index === dataEditContainer?.index) {
-        const updatedSubItems = x.contenido.map((item: any, indexTwo: number) => {
-          if (dataNumberService.index === indexTwo) {
-            return {
-              ...item,
-              styles: {
-                ...item?.styles,
-                background_card: color
-              }
-            };
-          }
-          return item;
-        });
-        return {
-          ...x,
-          contenido: updatedSubItems
-        };
-      }
-      return x;
-    });
-    setContainers(data);
-  };
 
-  const handleColorSelectService = (color: any) => {
-    setSelectedColor(color);
-    const data = containers?.map((x: any, index: number) => {
-      if (index === dataEditContainer?.index) {
-        const updatedSubItems = x.contenido.map((item: any, indexTwo: number) => {
-          if (dataNumberService.index === indexTwo) {
-            return {
-              ...item,
-              styles: {
-                ...item?.styles,
-                background_card: color
-              }
-            };
-          }
-          return item;
-        });
-        return {
-          ...x,
-          contenido: updatedSubItems
-        };
-      }
-      return x;
-    });
-    setContainers(data);
-  };
+
 
   return (
     <div className="web_page">
@@ -1811,171 +1743,13 @@ const WebNavigation = () => {
                     }
                     {dataEditContainer?.item?.tipo_contenedor === 2 ?
                       <div>
-                        <div className="row__two">
-                          <div className="slider-container-height">
-                            <div>
-                              <p>Tamaño del contendor</p>
-                              <input
-                                type="range"
-                                min="200"
-                                max="1000"
-                                onChange={containerServicesCard}
-                                className="slider__editor_wep-page"
-                              />
-                            </div>
-
-                          </div>
-                        </div>
-                        <div>
-                          <p>Colo de background</p>
-                          <div className="custom-color">
-
-                            <input type="color" onChange={colorServicesBackground} value={selectedColor} />
-                          </div>
-                        </div>
-                        <div>
-                          <p>Color de fondo</p>
-                          <div className="color-check-container">
-                            <label className="custom-checkbox">
-                              <input type="checkbox" onChange={handleCheck} />
-                              <span className="checkmark"></span>
-                              <span className="label-text">Activar paleta de colores</span>
-                            </label>
-
-                            {showPalette && (
-                              <div className="palette">
-                                {predefinedColors.map((color) => (
-                                  <div
-                                    key={color}
-                                    className="color-swatch"
-                                    style={{
-                                      backgroundColor: color,
-                                      border: selectedColor === color ? '3px solid #000' : 'none',
-                                    }}
-                                    onClick={() => handleColorSelectService(color)}
-                                  />
-                                ))}
-                                <div className="custom-color">
-                                  <label>Personalizado: </label>
-                                  <input type="color" onChange={handleCustomColorService} value={selectedColor} />
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        {dataNumberService?.type == 1 ?
-                          <div>
-                            <EditorImage typeName={'input_services_image'} subItems={true} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
-                            <div className="item_web-page">
-                              <p>Titulo</p>
-                              <EditorTitleContainers typeName={'input_services_title'} subItems={true} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
-                            </div>
-                            <div className="item_web-page">
-                              <p className="title__editor">Titulo del banner</p>
-                              <EditorDescriptionContainers typeName={'input_container_description'} subItems={true} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
-                            </div>
-                          </div>
-                          :
-                          ''
-                        }
-                        {dataNumberService?.type == 2 ?
-                          <div>
-                            <EditorImage typeName={'input_services_image'} subItems={true} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
-
-                            <div className="item_web-page">
-                              <p>Titulo</p>
-                            </div>
-                            <div className="item_web-page">
-                              <p className="title__editor">Descripción</p>
-                            </div>
-                          </div>
-                          :
-                          ''
-                        }
-                        {dataNumberService?.type == 3 ?
-                          <div>
-                            <EditorImage typeName={'input_services_image'} subItems={true} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
-                            <div className="item_web-page">
-                              <p>Titulo</p>
-                            </div>
-                            <div className="item_web-page">
-                              <p className="title__editor">Titulo del banner</p>
-                            </div>
-                          </div>
-                          :
-                          ''
-                        }
+                        <EditorContainer_2 indexContainer={indexContainer} />
                       </div>
                       :
                       ''
                     }
                     {dataEditContainer?.item?.tipo_contenedor === 3 ?
-                      <div>
-                        <div>
-                          <p>Invertir pocisiones</p>
-                          <label className="ios-switch">
-                            <input type="checkbox" checked={enabled} onChange={toggleSwitch} />
-                            <span className="slider" />
-                          </label>
-                        </div>
-                        <div className="row__two">
-                          <div className="slider-container-height">
-                            <div>
-                              <p>Tamaño del contendor</p>
-                              <input
-                                type="range"
-                                min="200"
-                                max="1000"
-
-                                onChange={containerEditorH}
-                                className="slider__editor_wep-page"
-                              />
-                            </div>
-
-                          </div>
-                        </div>
-                        <div>
-                          <p>Color de fondo</p>
-                          <div className="color-check-container">
-                            <label className="custom-checkbox">
-                              <input type="checkbox" onChange={handleCheck} />
-                              <span className="checkmark"></span>
-                              <span className="label-text">Activar paleta de colores</span>
-                            </label>
-
-                            {showPalette && (
-                              <div className="palette">
-                                {predefinedColors.map((color) => (
-                                  <div
-                                    key={color}
-                                    className="color-swatch"
-                                    style={{
-                                      backgroundColor: color,
-                                      border: selectedColor === color ? '3px solid #000' : 'none',
-                                    }}
-                                    onClick={() => handleColorSelect(color)}
-                                  />
-                                ))}
-                                <div className="custom-color">
-                                  <label>Personalizado: </label>
-                                  <input type="color" onChange={handleCustomColor} value={selectedColor} />
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <EditorImage typeName={'input_services_image'} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
-
-                        <div className="item_web-page">
-                          <p>Titulo</p>
-                          <EditorTitleContainers typeName={'input_description_title'} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
-                        </div>
-                        <div className="item_web-page">
-                          <p>Descripción</p>
-                          <EditorDescriptionContainers typeName={'input_description_description'} dataEditContainer={dataEditContainer} selectedTypeSection={selectedTypeSection} dataNumberService={dataNumberService} />
-                        </div>
-                      </div>
+                      <EditorContainer_3 indexContainer={indexContainer} />
                       :
                       ''
                     }
@@ -2024,7 +1798,7 @@ const WebNavigation = () => {
                     {dataEditContainer?.item?.tipo_contenedor === 6 ?
                       <div>
 
-                        <SmallBannerEditor />
+                        <SmallBannerEditor indexContainer={indexContainer} />
                       </div>
                       :
                       ''
@@ -2341,10 +2115,13 @@ const WebNavigation = () => {
 
         {validateSection == 5 || validateSection == 6 ?
           validateSection == 5 ?
-            <ArticleCreationForm />
+            <Articles />
             :
-            <CollectionBuilder />
+            <Collections />
+
+
           :
+
           <div ref={mainWebpageRef} style={overFlow} className={`main__webpage ${stateResponse ? 'response' : ''} `} >
             <div className="hero__web-page-edit">
               <div className='hero__web-page_container'>
@@ -2354,7 +2131,7 @@ const WebNavigation = () => {
                   <ul className={`nav__links_web-page ${stateToggle ? 'active' : ''}`}>
                     {sections?.map((x: any, index: any) => (
                       <li key={index}>
-                        <button dangerouslySetInnerHTML={{ __html: x.seccion }} style={{ color: x.imagen.color }} onClick={() => idConatinerHeader(x)}></button>
+                        <button dangerouslySetInnerHTML={{ __html: x.seccion }} onClick={() => idConatinerHeader(x)}></button>
                       </li>
                     ))}
                   </ul>
@@ -2368,7 +2145,6 @@ const WebNavigation = () => {
                 </div>
               </div>
             </div>
-
             <div className="section__one_web">
               <div className={`whatsapp__botton`}>
                 {linkButtons && linkButtons.map((x: any) => (
@@ -2410,7 +2186,6 @@ const WebNavigation = () => {
                             ''
                           }
                           <div className="tools_edits">
-
                             <div className="tools_edits_container">
                               <div className="add__item" onClick={() => addServiceItem(index)}>
                                 <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor"><path d="M440-440H240q-17 0-28.5-11.5T200-480q0-17 11.5-28.5T240-520h200v-200q0-17 11.5-28.5T480-760q17 0 28.5 11.5T520-720v200h200q17 0 28.5 11.5T760-480q0 17-11.5 28.5T720-440H520v200q0 17-11.5 28.5T480-200q-17 0-28.5-11.5T440-240v-200Z" /></svg>
@@ -2486,7 +2261,7 @@ const WebNavigation = () => {
                       }
                       {item.tipo_contenedor === 6 &&
                         <div className="banner_web-page-u">
-                          <SmallBanner item={item} banners={banners} index={index} />
+                          <SmallBanner item={item} index={index} />
                           {index !== containers[index].orden ?
                             <button className="btn__general-purple btn_save_order_web" onClick={() => updateContainerOrder(item, index)}>Guardar orden</button>
                             :
@@ -2629,57 +2404,15 @@ const WebNavigation = () => {
             <footer className="footer-web-page">
               <div className="footer-line"></div>
               <div className="footer-wrapper">
-                {/* <section className="footer-top">
-                      <div className="footer-headline">
-                          <h3>Sign up to our newsletter</h3>
-                          <p>
-                              Stay up to date with our news and articles
-                          </p>
-                      </div>
-                      <div className="footer-subscribe">
-                          <input type="email" placeholder="Your Email"/>
-                          <button>
-                              Sign Up
-                          </button>
-                      </div>
-                  </section>
-                  <div className="footer-columns">
-                      <section className="footer-logo">
-                          <img src={headerAndFooter.logo} max-width='20' alt="logo" />
-                      </section>
-                      <section>
-                        {titlesFooterOne.map((paragraph: any, index: any) => (
-                          <div key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
-                        ))}
-                      </section>
-                      <section>
-                        {titlesFooterTwo.map((paragraph: any, index: any) => (
-                          <div key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
-                        ))}
-                      </section>
-                      <section>
-                        {titlesFooterThree.map((paragraph: any, index: any) => (
-                          <div key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
-                        ))}
-                      </section>
-                  </div> */}
+
                 <div className="footer-bottom">
                   <small>© Desarrollado por Hiplot Business. <span id="year"></span>, Todos los derechos reservados</small>
-                  {/* <span className='social-links'>
-                          <a href="#" title="Instagram">
-                            <svg xmlns="http://www.w3.org/2000/svg" width='20' viewBox="0 0 512 512"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"/></svg>                      
-                          </a>
-                          <a href="#" title="Linkedin">
-                            <svg xmlns="http://www.w3.org/2000/svg" width='20' viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
-                          </a>
-                          <a href="#" title="Twitter">
-                            <svg xmlns="http://www.w3.org/2000/svg" width='20' viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
-                          </a>
-                      </span> */}
+
                 </div>
               </div>
             </footer>
           </div>
+
         }
       </div>
     </div>

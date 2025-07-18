@@ -3,6 +3,8 @@ import { useWebStore } from "../../../../../zustand/web-page/StoreWebPage";
 import './styles/EditorBanner.css'
 import "./styles/EditorBanner.css";
 import { useEditorBannerStore } from "../../../../../zustand/web-page/EditorBanner";
+import { useDropzone } from "react-dropzone";
+
 
 
 interface BannerData {
@@ -34,7 +36,57 @@ const EditorBanner = ({ indexContainer }: any) => {
 
   const setContainers = useWebStore(state => state.setContainers)
 
-  
+
+
+  const onDrop = (acceptedFiles: File[]) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const base64String = reader.result as string;
+
+
+        const data = containers?.map((x: any, index: number) => {
+          if (index === indexContainer) {
+            const contentIndex = x.contenido?.index;
+            const updatedData = x.contenido?.data?.map((item: any, subIndex: number) => {
+              if (subIndex === contentIndex) {
+                return {
+                  ...item,
+                  backgroundImage: base64String,
+                };
+              }
+              return item;
+            });
+
+            return {
+              ...x,
+              contenido: {
+                ...x.contenido,
+                data: updatedData,
+              },
+            };
+          }
+          return x;
+        });
+
+        setContainers(data);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'image/*': []
+    }
+  });
+
+
 
   // Text styling states
   const [selectTypesFontWeight, setSelectTypesFontWeight] = useState(false);
@@ -59,8 +111,6 @@ const EditorBanner = ({ indexContainer }: any) => {
     buttonText: "Get Started",
     buttonLink: "#",
   });
-
-
 
   const colorInputRef = useRef<HTMLInputElement>(null);
 
@@ -256,7 +306,27 @@ const EditorBanner = ({ indexContainer }: any) => {
         {/* Banner Properties */}
         <div className="banner-properties">
           <h3 className="section-title">Propiedades del Banner</h3>
-
+          <div className="property-group">
+            <div
+              {...getRootProps()}
+              className="dropzone"
+              style={{
+                border: "2px dashed #888",
+                padding: "20px",
+                marginTop: "10px",
+                textAlign: "center",
+                cursor: "pointer",
+                backgroundColor: isDragActive ? "#f0f0f0" : "#fff"
+              }}
+            >
+              <input {...getInputProps()} />
+              {isDragActive ? (
+                <p>Suelta la imagen aquí ...</p>
+              ) : (
+                <p>Arrastra y suelta una imagen, o haz clic para seleccionar</p>
+              )}
+            </div>
+          </div>
           <div className="property-group">
             <label>Título</label>
             <textarea
@@ -344,18 +414,8 @@ const EditorBanner = ({ indexContainer }: any) => {
           </div>
 
           <div className="property-group">
-            <label>Texto del Botón</label>
-            <input
-              type="text"
-              className="property-input"
-              value={bannerData.buttonText}
-              onChange={(e) =>
-                updateBannerProperty("buttonText", e.target.value)
-              }
-              placeholder="Texto del botón"
-            />
-          </div>
 
+          </div>
           <div className="property-group">
             <label>Enlace del Botón</label>
             <input

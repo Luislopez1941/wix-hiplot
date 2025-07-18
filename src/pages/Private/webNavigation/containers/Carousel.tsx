@@ -116,7 +116,9 @@ const ModernCarousel: React.FC<CarouselProps> = ({ selectedTypeFamily, item }: a
   }
 
   return (
-    <div className="carousel" style={{ backgroundColor: item?.style?.background_color }}>
+    <div className="carousel" 
+    // style={{ backgroundColor: item?.style?.background_color }}
+    >
       <div className="carousel-container">
         {/* Header */}
         <div className="carousel-header">

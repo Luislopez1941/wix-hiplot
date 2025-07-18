@@ -1,132 +1,94 @@
-import { useState, useMemo, useEffect } from "react";
-import ProductCard from "./ProductCard";
+import React, { useState, useEffect } from "react";
+import { Search, Eye } from "lucide-react";
 import "./styles/ProductCatalog.css";
-import type { Product } from "./ProductCard";
 import APIs from "../../services/services/APIs";
+import useUserStore from "../../zustand/General";
+import ProductModal from "./modal-catalog/ProductModal";
 
-// Las categorías se generan dinámicamente desde los productos
+interface Product {
+  id: number;
+  codigo: string;
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  imagen: string;
+  familia: number;
+  coleccion: number;
+  rating: number;
+  destacado: boolean;
+}
 
-const sortOptions = [
-  { label: "Más relevantes", value: "relevance" },
-  { label: "Precio: menor a mayor", value: "price-low" },
-  { label: "Precio: mayor a menor", value: "price-high" },
-  { label: "Mejor calificados", value: "rating" },
-  { label: "Más nuevos", value: "newest" },
-];
-
-const ProductCatalog = () => {
+const ProductCatalog: React.FC = () => {
+  const [selectedFamilia, setSelectedFamilia] = useState<number | null>(null);
+  const [selectedCollection, setSelectedCollection] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory] = useState("Todos");
-  const [sortBy, setSortBy] = useState("relevance");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-
-  // Se obtienen las familias desde la API al montar el componente.
-  // Luego, al hacer clic en una familia, se actualiza el estado `products`
-  // con los productos correspondientes a esa familia.
-  const [families, setFamilies] = useState<any[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        setLoading(true);
-        const response: any = await APIs.getFamilies(3);
-        setFamilies(response || []);
+  const userId = useUserStore((state) => state.user.id);
+  const [families, setFamilies] = useState<any[]>([]);
+  const [collections, setCollections] = useState<any[]>([]);
 
-        // Opcional: cargar los productos de la primera familia por defecto
-        if (response?.length > 0) {
-          const data = {
-            id: 0,
-            activos: true,
-            nombre: '',
-            codigo: '',
-            familia: 0,
-            proveedor: 0,
-            materia_prima: 99,
-            get_sucursales: false,
-            get_proveedores: false,
-            get_max_mins: false,
-            get_plantilla_data: false,
-            get_areas_produccion: false,
-            coleccion: false,
-            id_coleccion: 0,
-            get_stock: false,
-            get_web: false,
-            get_unidades: false,
-            for_vendedor: true,
-            page: 1,
-            id_usuario: 34,
-            light: true
-          };
+  const url_img = useUserStore((state) => state.url_img);
 
-          const result: any = await APIs.getArticlesForVendedor(data);
-          setProducts(result || []);
-        }
-      } catch (error) {
-        console.error("Error loading initial data:", error);
-        setFamilies([]);
-        setProducts([]);
-      } finally {
-        setLoading(false);
+  // Cargar familias al montar el componente
+  const loadFamilies = async () => {
+    try {
+      setLoading(true);
+      const familiesData: any = await APIs.getFamilies(userId);
+      setFamilies(familiesData);
+      
+      // Si hay familias, seleccionar la primera y cargar sus colecciones
+      if (familiesData && familiesData.length > 0) {
+        setSelectedFamilia(familiesData[0].id);
+        await loadCollections(familiesData[0].id);
       }
-    };
-
-    fetch();
-  }, []);
-
-  // Usar las primeras 10 familias como categorías
-  const categoriesFromFamilies = useMemo(() => {
-    return families?.slice(0, 10) || [];
-  }, [families]);
-
-  // Filtrado + Ordenamiento
-  const filteredAndSortedProducts = useMemo(() => {
-    let filtered = products?.filter((product: Product) => {
-      const matchesSearch =
-        product?.nombre?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
-        product?.descripcion?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
-        product?.codigo?.toLowerCase()?.includes(searchTerm.toLowerCase());
-
-      const matchesCategory = true; // No filtrar por categoría ya que se maneja por familias
-
-      return matchesSearch && matchesCategory;
-    });
-
-    switch (sortBy) {
-      case "price-low":
-        // Ordenar por ID (como referencia de precio temporal)
-        filtered?.sort((a, b) => (a?.id || 0) - (b?.id || 0));
-        break;
-      case "price-high":
-        filtered?.sort((a, b) => (b?.id || 0) - (a?.id || 0));
-        break;
-      case "rating":
-        // Ordenar por productos activos primero
-        filtered?.sort((a, b) => (b?.activo ? 1 : 0) - (a?.activo ? 1 : 0));
-        break;
-      case "newest":
-        // Ordenar por ID descendente (más nuevos primero)
-        filtered?.sort((a, b) => (b?.id || 0) - (a?.id || 0));
-        break;
-      default:
-        // Ordenar alfabéticamente por nombre
-        filtered?.sort((a, b) => a?.nombre?.localeCompare(b?.nombre || "") || 0);
-        break;
+    } catch (error) {
+      console.error("Error cargando familias:", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return filtered || [];
-  }, [products, searchTerm, selectedCategory, sortBy]);
+  // Cargar colecciones de una familia específica
+  const loadCollections = async (familiaId: number) => {
+    try {
+      setLoading(true);
+      const collectionsData: any = await APIs.getCollectionByFamily(familiaId);
+      setCollections(collectionsData);
+      
+      // Limpiar selección de colección
+      setSelectedCollection(null);
+      
+      // Si hay colecciones, seleccionar la primera y cargar sus productos
+      if (collectionsData && collectionsData.length > 0) {
+        setSelectedCollection(collectionsData[0].id);
+        await loadProducts(familiaId, collectionsData[0].id);
+      } else {
+        // Si no hay colecciones, limpiar productos
+        setProducts([]);
+        setFilteredProducts([]);
+      }
+    } catch (error) {
+      console.error("Error cargando colecciones:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleProductChange = async (family: any) => {
+  // Cargar productos de una colección específica
+  const loadProducts = async (familiaId: number, collectionId: number) => {
     try {
       setLoading(true);
       const data = {
         id: 0,
         activos: true,
-        nombre: '',
-        codigo: '',
-        familia: family?.id,
+        nombre: "",
+        codigo: "",
+        familia: 0,
         proveedor: 0,
         materia_prima: 99,
         get_sucursales: false,
@@ -135,239 +97,239 @@ const ProductCatalog = () => {
         get_plantilla_data: false,
         get_areas_produccion: false,
         coleccion: false,
-        id_coleccion: 0,
+        id_coleccion: collectionId,
         get_stock: false,
-        get_web: false,
+        get_web: true,
         get_unidades: false,
         for_vendedor: true,
         page: 1,
-        id_usuario: 34,
-        light: true
+        id_usuario: userId,
+        light: true,
       };
-
+      
       const result: any = await APIs.getArticlesForVendedor(data);
-      setProducts(result || []);
+      const productsData = result.data || result || [];
+      
+      // Transformar los datos de la API al formato que espera el componente
+      const transformedProducts: Product[] = productsData.map(
+        (product: any) => ({
+          id: product.id,
+          codigo: product.codigo || "",
+          nombre: product.nombre || product.descripcion || "",
+          descripcion: product.descripcion || "",
+          precio: product.precio || 0,
+          imagen: product.imagen || "/api/placeholder/200/200",
+          familia: product.familia || familiaId,
+          coleccion: product.coleccion || collectionId,
+          rating: product.rating || 4.0,
+          destacado: product.destacado || false,
+        }),
+      );
+      
+      setProducts(transformedProducts);
+      setFilteredProducts(transformedProducts);
     } catch (error) {
-      console.error("Error loading products:", error);
+      console.error("Error cargando productos:", error);
       setProducts([]);
+      setFilteredProducts([]);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="catalog-container">
-      {/* Header */}
-      <div className="catalog-header">
-        <div className="container">
-          <h1 className="catalog-title">Catálogo de Productos</h1>
-          <p className="catalog-subtitle">
-            Descubre nuestra amplia selección de productos de alta calidad
-          </p>
-        </div>
-      </div>
+  useEffect(() => {
+    loadFamilies();
+  }, [userId]);
 
-      <div className="container">
-        {/* Filtros */}
-        <div className="filters-section">
-          <div className="search-container">
-            <svg
-              className="search-icon"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Buscar productos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
+  // Manejar clic en familia
+  const handleFamiliaClick = async (familiaId: number) => {
+    if (selectedFamilia === familiaId) {
+      // Si ya está seleccionada, deseleccionar
+      setSelectedFamilia(null);
+      setSelectedCollection(null);
+      setCollections([]);
+      setProducts([]);
+      setFilteredProducts([]);
+    } else {
+      // Seleccionar nueva familia
+      setSelectedFamilia(familiaId);
+      await loadCollections(familiaId);
+    }
+  };
+
+  // Manejar clic en colección
+  const handleCollectionClick = async (collectionId: number) => {
+    if (selectedCollection === collectionId) {
+      // Si ya está seleccionada, deseleccionar
+      setSelectedCollection(null);
+      setProducts([]);
+      setFilteredProducts([]);
+    } else {
+      // Seleccionar nueva colección
+      setSelectedCollection(collectionId);
+      if (selectedFamilia) {
+        await loadProducts(selectedFamilia, collectionId);
+      }
+    }
+  };
+
+  // Manejar clic en producto para abrir modal
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  // Cerrar modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+  // Filtrar productos por término de búsqueda
+  useEffect(() => {
+    let filtered = products;
+
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (product) =>
+          product.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.codigo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.descripcion.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+    }
+
+    setFilteredProducts(filtered);
+  }, [searchTerm, products]);
+
+  return (
+    <div className="product-catalog">
+      {/* Main Content */}
+      <div className="main-content">
+        {/* Content Below Header */}
+        <div className="content-below-header">
+          {/* Sidebar - Familias */}
+          <div className="sidebar">
+            <div className="sidebar-header">
+              <h2>FAMILIAS</h2>
+            </div>
+            <div className="familia-list">
+              {loading ? (
+                <div className="loading">Cargando familias...</div>
+              ) : (
+                families.map((familia) => (
+                  <div
+                    key={familia.id}
+                    className={`familia-item ${selectedFamilia === familia.id ? "active" : ""}`}
+                    onClick={() => handleFamiliaClick(familia.id)}
+                  >
+                    <span className="familia-name">{familia.nombre}</span>
+                    <span className="familia-count">
+                      ({familia.count || 0})
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
 
-          <div className="controls-row">
-            <div className="categories-container">
-              {categoriesFromFamilies?.map((family: any) => (
-                <button
-                  key={family?.id}
-                  className="category-badge"
-                  onClick={() => handleProductChange(family)}
-                  disabled={loading}
-                >
-                  {family?.nombre}
-                </button>
-              ))}
-            </div>
-
-            <div className="controls-right">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="sort-select"
-              >
-                {sortOptions?.map((option) => (
-                  <option key={option?.value} value={option?.value}>
-                    {option?.label}
-                  </option>
-                ))}
-              </select>
-
-              <div className="view-mode-toggle">
-                <button
-                  className={`view-btn ${viewMode === "grid" ? "active" : ""}`}
-                  onClick={() => setViewMode("grid")}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <rect
-                      x="3"
-                      y="3"
-                      width="7"
-                      height="7"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                    <rect
-                      x="14"
-                      y="3"
-                      width="7"
-                      height="7"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                    <rect
-                      x="14"
-                      y="14"
-                      width="7"
-                      height="7"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                    <rect
-                      x="3"
-                      y="14"
-                      width="7"
-                      height="7"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                </button>
-                <button
-                  className={`view-btn ${viewMode === "list" ? "active" : ""}`}
-                  onClick={() => setViewMode("list")}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <line
-                      x1="8"
-                      y1="6"
-                      x2="21"
-                      y2="6"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                    <line
-                      x1="8"
-                      y1="12"
-                      x2="21"
-                      y2="12"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                    <line
-                      x1="8"
-                      y1="18"
-                      x2="21"
-                      y2="18"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                    <line
-                      x1="3"
-                      y1="6"
-                      x2="3.01"
-                      y2="6"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                    <line
-                      x1="3"
-                      y1="12"
-                      x2="3.01"
-                      y2="12"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                    <line
-                      x1="3"
-                      y1="18"
-                      x2="3.01"
-                      y2="18"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                </button>
+          {/* Right Content */}
+          <div className="right-content">
+            {/* Collections y Search */}
+            <div className="collections-search-section">
+              <div className="collections-nav">
+                {loading ? (
+                  <div className="loading">Cargando colecciones...</div>
+                ) : (
+                  collections.map((collection) => (
+                    <button
+                      key={collection.id}
+                      className={`collection-btn ${selectedCollection === collection.id ? "active" : ""}`}
+                      onClick={() => handleCollectionClick(collection.id)}
+                    >
+                      {collection.nombre}
+                    </button>
+                  ))
+                )}
+              </div>
+              <div className="search-container">
+                <Search className="search-icon" />
+                <input
+                  type="text"
+                  placeholder="Buscar productos..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="search-input"
+                />
               </div>
             </div>
+
+            {/* Products Section */}
+            <div className="products-section">
+              <div className="products-header">
+                <h2 className="products-title">
+                  {selectedCollection
+                    ? `PRODUCTOS - ${collections.find((c) => c.id === selectedCollection)?.nombre}`
+                    : "SELECCIONA UNA COLECCIÓN"}
+                </h2>
+                <span className="products-count">
+                  {filteredProducts.length} productos encontrados
+                </span>
+              </div>
+
+              {loading ? (
+                <div className="loading">Cargando productos...</div>
+              ) : (
+                <div className="products-grid">
+                  {filteredProducts.map((product) => (
+                    <div 
+                      key={product.id} 
+                      className="product-card"
+                      onClick={() => handleProductClick(product)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <div className="product-image-container">
+                        {product.destacado && (
+                          <div className="featured-badge">Destacado</div>
+                        )}
+                        <img src={`${url_img}${product.imagen}`} alt={product.nombre} className="product-image" />
+                        <div className="product-overlay">
+                          <button className="overlay-btn">
+                            <Eye className="icon-sm" />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="product-info">
+                        <div className="product-code">
+                          CÓDIGO: {product.codigo}
+                        </div>
+                        <h3 className="product-name">{product.nombre}</h3>
+                        <p className="product-description">
+                          {product.descripcion}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {!loading && filteredProducts.length === 0 && (
+                <div className="no-products">
+                  <h3>No se encontraron productos</h3>
+                  <p>Intenta ajustar tus filtros o términos de búsqueda</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-
-        {/* Resultados */}
-        <div className="results-count">
-          <p>
-            Mostrando {filteredAndSortedProducts?.length || 0} productos
-            {searchTerm && ` para "${searchTerm}"`}
-          </p>
-        </div>
-
-        {/* Loading */}
-        {loading && (
-          <div className="loading-state">
-            <div className="loading-spinner"></div>
-            <p>Cargando productos...</p>
-          </div>
-        )}
-
-        {/* Grid de productos */}
-        {!loading && (
-          <div
-            className={`products-grid ${viewMode === "list" ? "list-view" : ""}`}
-          >
-            {filteredAndSortedProducts?.map((product) => (
-              <ProductCard key={product?.id} product={product} />
-            ))}
-          </div>
-        )}
-
-        {/* Sin resultados */}
-        {!loading && filteredAndSortedProducts?.length === 0 && (
-          <div className="empty-state">
-            <svg
-              className="empty-icon"
-              width="64"
-              height="64"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
-            <h3 className="empty-title">No se encontraron productos</h3>
-            <p className="empty-description">
-              Intenta cambiar los filtros o términos de búsqueda
-            </p>
-          </div>
-        )}
       </div>
+
+      {/* Product Modal */}
+      <ProductModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        product={selectedProduct}
+        url_img={url_img}
+      />
     </div>
   );
 };

@@ -1,8 +1,4 @@
-:root {
-    --border-color: #dfdfdf;
-    --color-header-web-page: #fff;
-    --secondary-color-web-page: #000;
-}
+
 
 .input__web {
     border: none;
@@ -226,7 +222,7 @@
 
 
 .logo_web-page {
-    width: 70px;
+    width: 150px;
     height: 50px;
     background-position: center;
     background-size: cover;

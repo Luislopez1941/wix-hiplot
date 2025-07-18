@@ -6,7 +6,6 @@ import "./styles/Slider.css";
 
 
 const Slider: React.FC<any> = ({item, speed = 30}: any) => {
-
   console.log('item de slilder',item)
   
   return (
@@ -14,8 +13,12 @@ const Slider: React.FC<any> = ({item, speed = 30}: any) => {
       <div className="logo-slider-container">
         {/* Header */}
         <div className="logo-slider-header">
-          <h2 className="logo-slider-title">{item?.contenido?.title}</h2>
-          <p className="logo-slider-subtitle">{item?.contenido?.subtitle}</p>
+          <h2 className="logo-slider-title"
+          style={{ fontSize: `${item?.contenido?.title.styles?.font_fize}px`, fontWeight: item?.contenido?.title.styles?.font_weight, color: item?.contenido?.title.styles?.color }}
+          >{item?.contenido?.title?.text}</h2>
+          <p className="logo-slider-subtitle"
+          style={{ fontSize: `${item?.contenido?.description?.styles.font_fize}px`, fontWeight: item?.contenido?.description?.styles.font_weight, color: item?.contenido?.description?.styles.color }}
+          >{item?.contenido?.description?.text}</p>
         </div>
 
         {/* Slider */}
