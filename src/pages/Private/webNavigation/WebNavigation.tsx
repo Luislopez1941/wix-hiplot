@@ -38,12 +38,13 @@ import AboutUs from "./containers/AboutUs";
 import { BranchSection } from "./containers/BranchSection";
 import ProductCatalog from "./containers/ProductCatalog";
 import { useEditorBannerStore } from "../../../zustand/web-page/EditorBanner";
-import SmallBannerEditor from "./containers/editores/EditorSmallBanner";
+import EditorContainer_6 from "./containers/editores/EditorContainer_6";
 import EditorContainer_2 from "./containers/editores/EditorContainer_2";
 import EditorContainer_3 from "./containers/editores/EditorContainer_3";
 import Articles from "./sections/articles/Article";
 
 import Collections from "./sections/collection/Collections";
+import { button } from "framer-motion/client";
 
 
 const WebNavigation = () => {
@@ -994,6 +995,18 @@ const WebNavigation = () => {
               font_size: 12,
               color: '#fff'
             }
+          },
+          icono: {
+            icono: "",
+            styles: {
+              background: "#000"
+            }
+          },
+          button: {
+            text: "Ver más",
+            styles: {
+              background: "#000"
+            }
           }
         })
       }
@@ -1798,7 +1811,7 @@ const WebNavigation = () => {
                     {dataEditContainer?.item?.tipo_contenedor === 6 ?
                       <div>
 
-                        <SmallBannerEditor indexContainer={indexContainer} />
+                        <EditorContainer_6 indexContainer={indexContainer} />
                       </div>
                       :
                       ''

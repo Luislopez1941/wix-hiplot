@@ -3,8 +3,6 @@
     height: 300px;
     background-position: center;
     background-size: cover;
-
-
 }
 
 .small-banner_web .title__container {
@@ -20,10 +18,40 @@
     padding: 50px;
 }
 
-
 .small-banner_web .title__container .title__content {
     width: 100%;
     padding-bottom: 30px;
-   
+}
+
+/* Estilos para el botón */
+.small-banner__button {
+    display: inline-block;
+    text-decoration: none;
+    font-family: inherit;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.small-banner__button:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.small-banner__button:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive para el botón */
+@media (max-width: 768px) {
+    .small-banner__button {
+        padding: 8px 16px !important;
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .small-banner__button {
+        padding: 6px 12px !important;
+        font-size: 11px !important;
+    }
 }
 
